@@ -7,6 +7,23 @@ final_model = joblib.load("fraud_detection_model.joblib")
 text_model = joblib.load("text_model.joblib")
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
+NUMERIC_COLS = [
+    'months_as_customer', 'age', 'policy_deductable', 'policy_annual_premium', 
+    'umbrella_limit', 'capital-gains', 'capital-loss', 'incident_hour_of_the_day', 
+    'number_of_vehicles_involved', 'bodily_injuries', 'witnesses', 
+    'total_claim_amount', 'injury_claim', 'property_claim', 'vehicle_claim', 
+    'auto_year', 'text_suspicion_score'  # This is created by your script
+]
+
+CATEGORICAL_COLS = [
+    'policy_bind_date', 'policy_state', 'policy_csl', 'insured_sex', 
+    'insured_education_level', 'insured_occupation', 'insured_hobbies', 
+    'insured_relationship', 'incident_date', 'incident_type', 'collision_type', 
+    'incident_severity', 'authorities_contacted', 'incident_state', 
+    'incident_city', 'property_damage', 'police_report_available', 
+    'auto_make', 'auto_model'
+]
+
 # threshold (optional)
 try:
     with open("finalthresholdvalue.txt") as f:
@@ -24,62 +41,44 @@ def clean_text(t):
     s = " ".join(s.split()).strip().lower()
     return s
 
-def _looks_numeric_series(s: pd.Series) -> bool:
-    """
-    Return True if all non-null / non-empty-string values in the series 
-    look like numbers.
-    """
-    # Get all non-null values
-    non_null = s.dropna().astype(str).str.strip()
-    
-    # Filter out empty strings
-    non_empty = non_null[non_null != ""]
-    
-    if len(non_empty) == 0:
-        # Series contains only nulls, empty strings, or is empty.
-        # It's safe to treat as numeric (will become 0 or NaN).
-        return True 
-        
-    # Check if all remaining (non-empty) strings match numeric pattern
-    is_num_like = non_empty.str.match(r"^-?\d+(\.\d+)?$")
-    return is_num_like.all()
-
 def _build_input_df(claim: dict) -> pd.DataFrame:
     # Build dataframe from dict
     df = pd.DataFrame([claim])
 
-    # Ensure text_suspicion_score exists (model may expect it)
+    # Ensure text_suspicion_score exists (it's in our NUMERIC_COLS list)
     if "text_suspicion_score" not in df.columns:
         df["text_suspicion_score"] = np.nan
 
-    # Align columns to model if model exposes feature names
+    # Get the feature list the model *actually* expects
     try:
-        expected = list(final_model.feature_names_in_)
+        expected_features = list(final_model.feature_names_in_)
     except Exception:
-        expected = list(df.columns)
+        # Fallback if .feature_names_in_ is not available
+        expected_features = [c for c in (NUMERIC_COLS + CATEGORICAL_COLS) if c in df.columns]
 
-    # Ensure all expected columns present
-    for c in expected:
+    # Ensure all expected columns are present and add missing ones
+    for c in expected_features:
         if c not in df.columns:
             df[c] = np.nan
-    df = df[expected]
+    
+    # Filter dataframe to *only* the expected features
+    df = df[expected_features]
 
-    # --- Consolidated Type Conversion & Imputation Step ---
-    # Fill missing: numeric -> 0, object/categorical -> "Unknown"
+    # --- NEW EXPLICIT TYPE CONVERSION & IMPUTATION ---
+    # Loop through all columns the model expects
     for c in df.columns:
-        if pd.api.types.is_numeric_dtype(df[c]):
-            # It's already numeric. Just fill NaNs.
-            df[c] = df[c].fillna(0)
+        if c in NUMERIC_COLS:
+            # This column MUST be numeric. Coerce and fill with 0.
+            df[c] = pd.to_numeric(df[c], errors='coerce').fillna(0)
+        elif c in CATEGORICAL_COLS:
+            # This column MUST be categorical (string). Fill with "Unknown"
+            df[c] = df[c].fillna("Unknown").astype(str)
         else:
-            # It's object dtype. Check if it *should* be numeric
-            # using our new robust function.
-            if _looks_numeric_series(df[c]):
-                # Yes, it's numeric-like. Coerce and fill with 0.
-                df[c] = pd.to_numeric(df[c], errors="coerce").fillna(0)
-            else:
-                # No, it's categorical. Fill with "Unknown".
-                df[c] = df[c].fillna("Unknown")
-
+            # This is a column the model expects but we don't have a type for.
+            # (This shouldn't happen if the lists are correct, but it's a safe fallback)
+            # Default to filling with "Unknown" as a string.
+            df[c] = df[c].fillna("Unknown").astype(str)
+            
     if _DEBUG:
         print("DEBUG _build_input_df result:")
         print(df.head(5))
@@ -150,5 +149,6 @@ def fraudriskscore_final(claim: dict) -> dict:
             "text_suspicion_score": round(text_score, 4),
             "risk_level": risk,
             "decision": decision}
+
 
 
