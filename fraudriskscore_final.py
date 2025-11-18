@@ -12,7 +12,7 @@ NUMERIC_COLS = [
     'umbrella_limit', 'capital-gains', 'capital-loss', 'incident_hour_of_the_day', 
     'number_of_vehicles_involved', 'bodily_injuries', 'witnesses', 
     'total_claim_amount', 'injury_claim', 'property_claim', 'vehicle_claim', 
-    'auto_year', 'text_suspicion_score'  # This is created by your script
+    'auto_year', 'text_suspicion_score','policy_number'
 ]
 
 CATEGORICAL_COLS = [
@@ -149,6 +149,7 @@ def fraudriskscore_final(claim: dict) -> dict:
             "text_suspicion_score": round(text_score, 4),
             "risk_level": risk,
             "decision": decision}
+
 
 
 
