@@ -169,6 +169,104 @@ with st.form(key="claim_values"):
     # --- Submit Button ---
     submitted = st.form_submit_button("Analyze Claim for Fraud")
 
+# POST-SUBMISSION LOGIC
+# -----------------------------------------------------------------
+if submitted:
+    st.header("Analysis Results")
+    with st.spinner("Running fraud detection model..."):
+        try:          
+            safe_total_claim = total_claim_amount if total_claim_amount > 0 else 1.0
+            safe_annual_premium = policy_annual_premium if policy_annual_premium > 0 else 1.0
+
+            claim_to_premium_ratio = total_claim_amount / safe_annual_premium
+            injury_ratio = injury_claim / safe_total_claim
+            property_ratio = property_claim / safe_total_claim
+            vehicle_ratio = vehicle_claim / safe_total_claim
+
+            daysdiff = (incident_date - policy_bind_date).days
+            
+            police_report_flag = 1 if police_report_available == "YES" else 0
+            property_damage_flag = 1 if property_damage == "YES" else 0
+            authorities_contacted_flag = 1 if authorities_contacted != "None" else 0
+            injury_flag = 1 if bodily_injuries > 0 else 0
+            multiple_vehicles_flag = 1 if number_of_vehicles_involved > 1 else 0
+
+            final_claim_data = {
+                "months_as_customer": months_as_customer,
+                "age": age,
+                "policy_number": policy_number,
+                "policy_bind_date": str(policy_bind_date), # Convert dates to strings
+                "policy_state": policy_state,
+                "policy_csl": policy_csl,
+                "policy_deductable": policy_deductable,
+                "policy_annual_premium": policy_annual_premium,
+                "umbrella_limit": umbrella_limit,
+                "insured_zip": insured_zip,
+                "insured_sex": insured_sex,
+                "insured_education_level": insured_education_level,
+                "insured_occupation": insured_occupation,
+                "insured_hobbies": insured_hobbies,
+                "insured_relationship": insured_relationship,
+                "capital-gains": capital_gains,
+                "capital-loss": capital_loss,
+                "incident_date": str(incident_date), # Convert dates to strings
+                "incident_type": incident_type,
+                "collision_type": collision_type,
+                "incident_severity": incident_severity,
+                "authorities_contacted": authorities_contacted,
+                "incident_state": incident_state,
+                "incident_city": incident_city,
+                "incident_location": incident_location,
+                "incident_hour_of_the_day": incident_hour_of_the_day,
+                "number_of_vehicles_involved": number_of_vehicles_involved,
+                "property_damage": property_damage,
+                "bodily_injuries": bodily_injuries,
+                "witnesses": witnesses,
+                "police_report_available": police_report_available,
+                "total_claim_amount": total_claim_amount,
+                "injury_claim": injury_claim,
+                "property_claim": property_claim,
+                "vehicle_claim": vehicle_claim,
+                "auto_make": auto_make,
+                "auto_model": auto_model,
+                "auto_year": auto_year,
+                "claim_description": claim_description,
+                
+                "claim_to_premium_ratio": claim_to_premium_ratio,
+                "injury_ratio": injury_ratio,
+                "property_ratio": property_ratio,
+                "vehicle_ratio": vehicle_ratio,
+                "daysdiff": daysdiff,
+                "police_report_flag": police_report_flag,
+                "property_damage_flag": property_damage_flag,
+                "authorities_contacted_flag": authorities_contacted_flag,
+                "injury_flag": injury_flag,
+                "multiple_vehicles_flag": multiple_vehicles_flag
+            }
+
+            result = fraudriskscore_final(final_claim_data)
+            
+            st.success("Analysis Complete!")
+            
+            st.subheader(f"Decision: **{result['decision']}**")
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Fraud Risk Score", f"{result['fraud_risk_score'] * 100:.1f}%", 
+                        help="The model's overall fraud probability.")
+            col2.metric("Risk Level", result['risk_level'])
+            col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
+                        help="The model's suspicion score based on the claim description text.")
+
+            with st.expander("Show Full JSON Response"):
+                st.json(result)
+            
+            with st.expander("Show Final Data Sent to Model (Debug)"):
+                st.json(final_claim_data)
+
+        except Exception as e:
+            st.error(f"An error occurred during prediction:")
+            st.exception(e)
+
+
 
 
 
