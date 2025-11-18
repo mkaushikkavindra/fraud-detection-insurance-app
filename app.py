@@ -3,7 +3,7 @@ import streamlit as st
 from fraudriskscore_final import fraudriskscore_final
 import pandas as pd, datetime
 
-st.title("Fraud Detection - Local smoke test")
+st.title("Vehicle Insurance Fraud Detection")
 
 st.sidebar.header("Quick test & health checks")
 
@@ -132,6 +132,7 @@ if st.button("Run high-fraud preset"):
     except Exception as e:
         st.error("Error during prediction")
         st.write(str(e))
+
 
 
 
