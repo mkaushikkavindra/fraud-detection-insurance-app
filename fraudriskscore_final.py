@@ -31,7 +31,7 @@ def _looks_numeric_series(s: pd.Series) -> bool:
     """
     non_null = s.dropna().astype(str).str.strip()
     if len(non_null) == 0:
-        return False
+        return True
     # regex for integer or float (one optional leading - and optional decimal point)
     is_num_like = non_null.str.match(r"^-?\d+(\.\d+)?$")
     return is_num_like.all()
@@ -149,3 +149,4 @@ def fraudriskscore_final(claim: dict) -> dict:
             "text_suspicion_score": round(text_score, 4),
             "risk_level": risk,
             "decision": decision}
+
