@@ -5,8 +5,6 @@ import pandas as pd, datetime
 
 st.title("Vehicle Insurance Fraud Detection")
 
-st.sidebar.header("Enter the required details below")
-
 def smoke_check():
     sample = {
     "months_as_customer": 48,
@@ -132,6 +130,7 @@ if st.button("Run high-fraud preset"):
     except Exception as e:
         st.error("Error during prediction")
         st.write(str(e))
+
 
 
 
