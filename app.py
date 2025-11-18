@@ -66,10 +66,10 @@ def smoke_check():
 ok, info = smoke_check()
 if ok:
     st.sidebar.success("Model loaded & runnable")
-    st.sidebar.json(info)
+    #st.sidebar.json(info)
 else:
     st.sidebar.error("Model load/predict failed")
-    st.sidebar.write(info)
+    #st.sidebar.write(info)
 
 st.header("Submit a New Claim for Analysis")
 st.write("Enter the required details to get a FRAUD RISK SCORE.")
@@ -265,6 +265,7 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred during prediction:")
             st.exception(e)
+
 
 
 
