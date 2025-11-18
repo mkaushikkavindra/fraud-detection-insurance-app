@@ -11,7 +11,7 @@ def smoke_check():
     sample = {
     "months_as_customer": 48,
     "age": 35,
-    "policy_number": "AB12345",
+    "policy_number": "12345",
     "policy_bind_date": "2018-07-15",
     "policy_state": "CA",
     "policy_csl": "250/500",
@@ -132,5 +132,6 @@ if st.button("Run high-fraud preset"):
     except Exception as e:
         st.error("Error during prediction")
         st.write(str(e))
+
 
 
