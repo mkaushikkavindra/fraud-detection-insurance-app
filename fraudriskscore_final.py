@@ -26,14 +26,22 @@ def clean_text(t):
 
 def _looks_numeric_series(s: pd.Series) -> bool:
     """
-    Return True if all non-null values in the series look like numbers,
-    e.g. "123", "45.6", "-7". We treat numeric-like strings as convertible.
+    Return True if all non-null / non-empty-string values in the series 
+    look like numbers.
     """
+    # Get all non-null values
     non_null = s.dropna().astype(str).str.strip()
-    if len(non_null) == 0:
-        return True
-    # regex for integer or float (one optional leading - and optional decimal point)
-    is_num_like = non_null.str.match(r"^-?\d+(\.\d+)?$")
+    
+    # Filter out empty strings
+    non_empty = non_null[non_null != ""]
+    
+    if len(non_empty) == 0:
+        # Series contains only nulls, empty strings, or is empty.
+        # It's safe to treat as numeric (will become 0 or NaN).
+        return True 
+        
+    # Check if all remaining (non-empty) strings match numeric pattern
+    is_num_like = non_empty.str.match(r"^-?\d+(\.\d+)?$")
     return is_num_like.all()
 
 def _build_input_df(claim: dict) -> pd.DataFrame:
@@ -56,28 +64,21 @@ def _build_input_df(claim: dict) -> pd.DataFrame:
             df[c] = np.nan
     df = df[expected]
 
-    # --- SAFE numeric conversion step ---
-    # For each column that looks numeric, convert it to numeric dtype.
-    for c in df.columns:
-        try:
-            # If already numeric dtype, skip
-            if pd.api.types.is_numeric_dtype(df[c]):
-                continue
-            # If values look numeric (all non-null values match numeric pattern), convert
-            if _looks_numeric_series(df[c]):
-                df[c] = pd.to_numeric(df[c], errors="coerce")
-            # otherwise leave as-is (categorical / text)
-        except Exception:
-            # keep original column if conversion attempt fails
-            pass
-
+    # --- Consolidated Type Conversion & Imputation Step ---
     # Fill missing: numeric -> 0, object/categorical -> "Unknown"
     for c in df.columns:
         if pd.api.types.is_numeric_dtype(df[c]):
+            # It's already numeric. Just fill NaNs.
             df[c] = df[c].fillna(0)
         else:
-            # coerce NaN-like to string "Unknown"
-            df[c] = df[c].fillna("Unknown")
+            # It's object dtype. Check if it *should* be numeric
+            # using our new robust function.
+            if _looks_numeric_series(df[c]):
+                # Yes, it's numeric-like. Coerce and fill with 0.
+                df[c] = pd.to_numeric(df[c], errors="coerce").fillna(0)
+            else:
+                # No, it's categorical. Fill with "Unknown".
+                df[c] = df[c].fillna("Unknown")
 
     if _DEBUG:
         print("DEBUG _build_input_df result:")
@@ -149,4 +150,5 @@ def fraudriskscore_final(claim: dict) -> dict:
             "text_suspicion_score": round(text_score, 4),
             "risk_level": risk,
             "decision": decision}
+
 
