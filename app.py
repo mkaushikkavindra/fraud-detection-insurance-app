@@ -71,7 +71,7 @@ else:
     st.sidebar.error("Model load/predict failed")
     st.sidebar.write(info)
 
-st.write("Press the button to run a high-fraud preset")
+st.write("Enter the required details to get a FRAUD RISK SCORE.")
 if st.button("Run high-fraud preset"):
     high = {
     "months_as_customer": 48,
@@ -130,6 +130,7 @@ if st.button("Run high-fraud preset"):
     except Exception as e:
         st.error("Error during prediction")
         st.write(str(e))
+
 
 
 
