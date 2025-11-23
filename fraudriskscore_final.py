@@ -5,6 +5,8 @@ from sentence_transformers import SentenceTransformer
 # ----- load models (will raise on import if missing) -----
 final_model = joblib.load("fraud_detection_model.joblib")
 text_model = joblib.load("text_model.joblib")
+gbc_model = joblib.load("gbcmodel.joblib")
+lr_model = joblib.load("logisticregression.joblib")
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 NUMERIC_COLS = [
@@ -149,6 +151,7 @@ def fraudriskscore_final(claim: dict) -> dict:
             "text_suspicion_score": round(text_score, 4),
             "risk_level": risk,
             "decision": decision}
+
 
 
 
