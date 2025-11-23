@@ -1,6 +1,6 @@
 # app.py
 import streamlit as st
-from fraudriskscore_final import fraudriskscore_final
+from fraudriskscore_final import fraudriskscore_final,fraudriskscore_LR,fraudriskscore_GBC
 import pandas as pd, datetime
 
 st.title("Vehicle Insurance Fraud Detection")
@@ -265,6 +265,7 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred during prediction:")
             st.exception(e)
+
 
 
 
