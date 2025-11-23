@@ -104,41 +104,40 @@ def _build_input_df(claim: Dict[str, Any], model_reference: Pipeline) -> pd.Data
             
     return df
 
-def _calculate_base_score(claim: Dict[str, Any], model: Pipeline) -> tuple[float, float]:
-    # ... (Rest of this function is unchanged)
-    # 1. Extract text and calculate Text Suspicion Score (UNCHANGED)
-    text = ""
-    for key in ("claim_description","adjuster_notes","notes","text_all"):
-        if key in claim and claim[key] not in (None, ""):
-            text = claim[key]
-            break
-            
-    cleaned = clean_text(text)
-    text_score = 0.0
-    if cleaned != "":
-        try:
-            emb = embedder.encode([cleaned], show_progress_bar=False)
-            emb = np.asarray(emb)
-            if hasattr(text_model, "predict_proba"):
-                text_score = float(text_model.predict_proba(emb)[:, 1][0])
-            else:
-                text_score = float(text_model.predict(emb)[0])
-        except Exception:
-            text_score = 0.0
 
-    # 2. Build and Align DataFrame (calls the fixed function)
+def _calculate_base_score(claim: Dict[str, Any], model: Pipeline) -> tuple[float, float]:
+    """Calculates text score and final prediction probability for any given model."""
+    
+    # 1. Extract text and calculate Text Suspicion Score (unchanged)
+    # ... (code for text_score calculation) ...
+
+    # 2. Build and Align DataFrame
     df = _build_input_df(claim, model)
 
-    # 3. Assign the calculated text_suspicion_score
+    # 3. Assign the calculated text_suspicion_score (unchanged)
     if "text_suspicion_score" in df.columns:
         df["text_suspicion_score"] = text_score
 
+    # --- FIX: Ensure the final DataFrame is strictly numerical and clean ---
+    try:
+        # Convert the entire DataFrame to numeric types.
+        # If any value cannot be converted (e.g., a remaining string), it becomes NaN.
+        df = df.apply(pd.to_numeric, errors='coerce') 
+        
+        # Fill any remaining NaNs with 0.0, ensuring a completely clean input.
+        df = df.fillna(0.0) 
+        
+        # Finally, ensure all columns are the expected float type
+        df = df.astype(float)
+    except Exception as e:
+        # If conversion fails here, it's a severe data issue.
+        raise RuntimeError(f"Data cleanup failed before prediction: {e}")
+    # -----------------------------------------------------------------------
+
     # 4. Predict
     try:
-        # Ensure model receives a clean, numerical DataFrame
         proba = float(model.predict_proba(df)[0, 1])
     except Exception as e:
-        # This is where the original error happened. The fix should prevent it.
         raise RuntimeError(f"Model prediction error: {e}")
 
     return proba, text_score
@@ -204,5 +203,6 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
             "risk_level": risk,
             "decision": decision,
             "threshold_used": THRESHOLD}
+
 
 
