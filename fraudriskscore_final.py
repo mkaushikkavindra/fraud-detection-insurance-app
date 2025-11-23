@@ -126,23 +126,26 @@ def _calculate_base_score(claim: Dict[str, Any], model: Pipeline) -> tuple[float
             text_score = 0.0
 
     # 2. Build and Align DataFrame
-    df = _build_input_df(claim, model)
+    df = _build_input_df(claim, model) 
 
-    # 3. Assign the calculated text_suspicion_score
+    # 3. Assign the calculated text_suspicion_score (UNCHANGED)
     if "text_suspicion_score" in df.columns:
         df["text_suspicion_score"] = text_score
 
-    # --- FIX: Ensure the final DataFrame is strictly numerical and clean ---
+    # --- FINAL ROBUST FIX: Ensure the DataFrame is strictly numerical ---
     try:
-        # 1. Convert the entire DataFrame to numeric types (Coerce non-numbers to NaN)
+        # 1. Force all columns to numeric types. This handles non-OHE features
+        # (like policy_csl, which might contain strings) that were not caught 
+        # by the manual OHE and are still 'object' types.
         df = df.apply(pd.to_numeric, errors='coerce') 
         
-        # 2. Fill any remaining NaNs with 0.0 (Impute missing data)
+        # 2. Fill all NaNs resulting from coercion or alignment with 0.0
         df = df.fillna(0.0) 
         
-        # 3. Ensure all columns are the expected float type
+        # 3. Ensure the entire structure is a consistent float type for the model
         df = df.astype(float)
     except Exception as e:
+        # If this fails, the error message will confirm the exact issue
         raise RuntimeError(f"Data cleanup failed before prediction: {e}")
     # -----------------------------------------------------------------------
 
@@ -215,4 +218,5 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
             "risk_level": risk,
             "decision": decision,
             "threshold_used": THRESHOLD}
+
 
