@@ -1,10 +1,12 @@
 # app.py
 import streamlit as st
-from fraudriskscore_final import fraudriskscore_final,fraudriskscore_LR,fraudriskscore_GBC
+# Import all three scoring functions from the module
+from fraudriskscore_final import fraudriskscore_final, fraudriskscore_LR, fraudriskscore_GBC
 import pandas as pd, datetime
 
 st.title("Vehicle Insurance Fraud Detection")
 
+# --- Helper function for smoke check (unchanged) ---
 def smoke_check():
     sample = {
     "months_as_customer": 48,
@@ -57,8 +59,9 @@ def smoke_check():
     "multiple_vehicles_flag": 1,
     "claim_description": "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain."
 }
+    # Using fraudriskscore_final (which is RFC) for the smoke test
     try:
-        out = fraudriskscore_final(sample)
+        out = fraudriskscore_final(sample) 
         return True, out
     except Exception as e:
         return False, str(e)
@@ -71,9 +74,26 @@ else:
     st.sidebar.error("Model load/predict failed")
     #st.sidebar.write(info)
 
+# --- NEW: Model Selection in Sidebar ---
+st.sidebar.header("Model Selection")
+model_options = {
+    "Random Forest Classifier (RFC)": fraudriskscore_final, # RFC is aliased as fraudriskscore_final in the original code
+    "Gradient Boosting Classifier (GBC)": fraudriskscore_GBC,
+    "Logistic Regression (LR)": fraudriskscore_LR,
+}
+selected_model_name = st.sidebar.selectbox(
+    "Select Model for Prediction",
+    list(model_options.keys()),
+    index=0, # RFC is the default
+    help="GBC is typically optimized for high recall (catching more fraud), while RFC is a good all-arounder."
+)
+selected_model_function = model_options[selected_model_name]
+# ---------------------------------------
+
 st.header("Submit a New Claim for Analysis")
 st.write("Enter the required details to get a FRAUD RISK SCORE.")
 
+# --- FORM (UNCHANGED) ---
 with st.form(key="claim_values"):
     # --- Helper lists for selectboxes ---
     yes_no_options = ["NO", "YES"]
@@ -173,11 +193,14 @@ with st.form(key="claim_values"):
 # -----------------------------------------------------------------
 if submitted:
     st.header("Analysis Results")
-    with st.spinner("Running fraud detection model..."):
+    st.subheader(f"Model Used: **{selected_model_name}**") # Display which model was used
+
+    with st.spinner(f"Running fraud detection model ({selected_model_name})..."):
         try:          
             safe_total_claim = total_claim_amount if total_claim_amount > 0 else 1.0
             safe_annual_premium = policy_annual_premium if policy_annual_premium > 0 else 1.0
 
+            # Feature Engineering (UNCHANGED)
             claim_to_premium_ratio = total_claim_amount / safe_annual_premium
             injury_ratio = injury_claim / safe_total_claim
             property_ratio = property_claim / safe_total_claim
@@ -244,14 +267,16 @@ if submitted:
                 "multiple_vehicles_flag": multiple_vehicles_flag
             }
 
-            result = fraudriskscore_final(final_claim_data)
+            # --- KEY CHANGE: Call the function based on selection ---
+            result = selected_model_function(final_claim_data)
+            # -------------------------------------------------------
             
             st.success("Analysis Complete!")
             
             st.subheader(f"Decision: **{result['decision']}**")
             col1, col2, col3 = st.columns(3)
             col1.metric("Fraud Risk Score", f"{result['fraud_risk_score'] * 100:.1f}%", 
-                        help="The model's overall fraud probability.")
+                        help=f"The selected model's ({selected_model_name}) overall fraud probability, based on a threshold of {result['threshold_used'] * 100:.1f}%.")
             col2.metric("Risk Level", result['risk_level'])
             col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
                         help="The model's suspicion score based on the claim description text.")
@@ -265,22 +290,3 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred during prediction:")
             st.exception(e)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
