@@ -59,9 +59,6 @@ def smoke_check():
     "multiple_vehicles_flag": 1,
     "claim_description": "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain."
 }
-    print(final_model.feature_names_in_)
-    print(model_lr.feature_names_in_)
-    print(model_gbc.feature_names_in_)
     # Using fraudriskscore_RFC for the smoke test
     try:
         out = fraudriskscore_RFC(sample) 
@@ -293,5 +290,6 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred during prediction:")
             st.exception(e)
+
 
 
