@@ -6,7 +6,7 @@ import pandas as pd, datetime
 
 st.title("Vehicle Insurance Fraud Detection")
 
-# --- Helper function for smoke check (unchanged) ---
+# --- Helper function for smoke check ---
 def smoke_check():
     sample = {
     "months_as_customer": 48,
@@ -59,9 +59,9 @@ def smoke_check():
     "multiple_vehicles_flag": 1,
     "claim_description": "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain."
 }
-    # Using fraudriskscore_final (which is RFC) for the smoke test
+    # Using fraudriskscore_RFC for the smoke test
     try:
-        out = fraudriskscore_final(sample) 
+        out = fraudriskscore_RFC(sample) 
         return True, out
     except Exception as e:
         return False, str(e)
@@ -77,7 +77,7 @@ else:
 # --- NEW: Model Selection in Sidebar ---
 st.sidebar.header("Model Selection")
 model_options = {
-    "Random Forest Classifier (RFC)": fraudriskscore_RFC, 
+    "Random Forest Classifier (RFC)": fraudriskscore_RFC, # RFC is aliased as fraudriskscore_final in the original code
     "Gradient Boosting Classifier (GBC)": fraudriskscore_GBC,
     "Logistic Regression (LR)": fraudriskscore_LR,
 }
@@ -93,7 +93,7 @@ selected_model_function = model_options[selected_model_name]
 st.header("Submit a New Claim for Analysis")
 st.write("Enter the required details to get a FRAUD RISK SCORE.")
 
-# --- FORM (UNCHANGED) ---
+# --- FORM ---
 with st.form(key="claim_values"):
     # --- Helper lists for selectboxes ---
     yes_no_options = ["NO", "YES"]
@@ -200,7 +200,7 @@ if submitted:
             safe_total_claim = total_claim_amount if total_claim_amount > 0 else 1.0
             safe_annual_premium = policy_annual_premium if policy_annual_premium > 0 else 1.0
 
-            # Feature Engineering (UNCHANGED)
+            # Feature Engineering 
             claim_to_premium_ratio = total_claim_amount / safe_annual_premium
             injury_ratio = injury_claim / safe_total_claim
             property_ratio = property_claim / safe_total_claim
@@ -290,5 +290,3 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred during prediction:")
             st.exception(e)
-
-
