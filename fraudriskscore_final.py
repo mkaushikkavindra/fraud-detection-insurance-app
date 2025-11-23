@@ -152,6 +152,11 @@ def fraudriskscore_final(claim: dict) -> dict:
             "risk_level": risk,
             "decision": decision}
 
+def fraudriskscore_LR(claim: dict) -> dict:
+    pass
+    
+def fraudriskscore_GBC(claim: dict) -> dict:
+    pass
 
 
 
