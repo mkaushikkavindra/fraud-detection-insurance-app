@@ -1,6 +1,7 @@
 import joblib, re, numpy as np, pandas as pd
 from sentence_transformers import SentenceTransformer
 from typing import Dict, Any
+from sklearn.pipeline import Pipeline
 
 # --- GLOBAL CONFIGURATION AND DEPENDENCY LOADING ---
 # NOTE: Update file names if your saved models differ slightly.
@@ -165,3 +166,4 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
             "risk_level": risk,
             "decision": decision,
             "threshold_used": THRESHOLD}
+
