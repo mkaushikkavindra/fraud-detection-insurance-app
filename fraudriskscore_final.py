@@ -7,10 +7,15 @@ from sklearn.pipeline import Pipeline # FIX: Import Pipeline to resolve NameErro
 # NOTE: Update file names if your saved models differ slightly.
 try:
     final_model = joblib.load("fraud_detection_model.joblib")
+    print("Loaded")
     model_lr = joblib.load("logisticregression.joblib")
+    print("Loaded")
     model_gbc = joblib.load("gbcmodel.joblib")
+    print("Loaded")
     text_model = joblib.load("text_model.joblib")
+    print("Loaded")
     embedder = SentenceTransformer("all-MiniLM-L6-v2")
+    print("Loaded")
 except Exception as e:
     # Use placeholder if loading fails (Streamlit will display the error)
     class DummyModel:
@@ -210,3 +215,4 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
             "risk_level": risk,
             "decision": decision,
             "threshold_used": THRESHOLD}
+
