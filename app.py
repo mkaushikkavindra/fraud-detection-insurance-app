@@ -1,7 +1,7 @@
 # app.py
 import streamlit as st
 # Import all three scoring functions from the module
-from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC
+from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC, fraudriskscore_final
 import pandas as pd, datetime
 
 st.title("Vehicle Insurance Fraud Detection")
@@ -59,25 +59,25 @@ def smoke_check():
     "multiple_vehicles_flag": 1,
     "claim_description": "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain."
 }
-    # Using fraudriskscore_RFC for the smoke test
     try:
-        out = fraudriskscore_RFC(sample) 
+        # Check all models for robustness
+        fraudriskscore_RFC(sample)
+        fraudriskscore_LR(sample)
+        out = fraudriskscore_GBC(sample) # Use GBC as the final check output
         return True, out
     except Exception as e:
         return False, str(e)
 
 ok, info = smoke_check()
 if ok:
-    st.sidebar.success("Model loaded & runnable")
-    #st.sidebar.json(info)
+    st.sidebar.success("All models loaded & runnable")
 else:
-    st.sidebar.error("Model load/predict failed")
-    st.sidebar.write(info)
+    st.sidebar.error(f"Model load/predict failed. Error: {info}")
 
 # --- NEW: Model Selection in Sidebar ---
 st.sidebar.header("Model Selection")
 model_options = {
-    "Random Forest Classifier (RFC)": fraudriskscore_RFC, # RFC is aliased as fraudriskscore_final in the original code
+    "Random Forest Classifier (RFC)": fraudriskscore_RFC,
     "Gradient Boosting Classifier (GBC)": fraudriskscore_GBC,
     "Logistic Regression (LR)": fraudriskscore_LR,
 }
@@ -85,7 +85,7 @@ selected_model_name = st.sidebar.selectbox(
     "Select Model for Prediction",
     list(model_options.keys()),
     index=0, # RFC is the default
-    help="GBC is typically optimized for high recall (catching more fraud), while RFC is a good all-arounder."
+    help="GBC is optimized for F1/Recall. LR is a simple baseline. RFC is a general safety net."
 )
 selected_model_function = model_options[selected_model_name]
 # ---------------------------------------
@@ -93,7 +93,6 @@ selected_model_function = model_options[selected_model_name]
 st.header("Submit a New Claim for Analysis")
 st.write("Enter the required details to get a FRAUD RISK SCORE.")
 
-# --- FORM ---
 with st.form(key="claim_values"):
     # --- Helper lists for selectboxes ---
     yes_no_options = ["NO", "YES"]
@@ -194,7 +193,7 @@ with st.form(key="claim_values"):
 if submitted:
     st.header("Analysis Results")
     st.subheader(f"Model Used: **{selected_model_name}**") # Display which model was used
-
+    
     with st.spinner(f"Running fraud detection model ({selected_model_name})..."):
         try:          
             safe_total_claim = total_claim_amount if total_claim_amount > 0 else 1.0
@@ -218,7 +217,7 @@ if submitted:
                 "months_as_customer": months_as_customer,
                 "age": age,
                 "policy_number": policy_number,
-                "policy_bind_date": str(policy_bind_date), # Convert dates to strings
+                "policy_bind_date": str(policy_bind_date), 
                 "policy_state": policy_state,
                 "policy_csl": policy_csl,
                 "policy_deductable": policy_deductable,
@@ -232,7 +231,7 @@ if submitted:
                 "insured_relationship": insured_relationship,
                 "capital-gains": capital_gains,
                 "capital-loss": capital_loss,
-                "incident_date": str(incident_date), # Convert dates to strings
+                "incident_date": str(incident_date), 
                 "incident_type": incident_type,
                 "collision_type": collision_type,
                 "incident_severity": incident_severity,
@@ -290,6 +289,3 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred during prediction:")
             st.exception(e)
-
-
-
