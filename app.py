@@ -72,7 +72,7 @@ if ok:
     #st.sidebar.json(info)
 else:
     st.sidebar.error("Model load/predict failed")
-    #st.sidebar.write(info)
+    st.sidebar.write(info)
 
 # --- NEW: Model Selection in Sidebar ---
 st.sidebar.header("Model Selection")
@@ -290,3 +290,4 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred during prediction:")
             st.exception(e)
+
