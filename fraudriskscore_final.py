@@ -4,8 +4,8 @@ from typing import Dict, Any
 from sklearn.pipeline import Pipeline # FIX: Import Pipeline to resolve NameError
 
 # --- GLOBAL CONFIGURATION AND DEPENDENCY LOADING ---
+# NOTE: Update file names if your saved models differ slightly.
 try:
-    # NOTE: Update file names if your saved models differ slightly.
     final_model = joblib.load("fraud_detection_model.joblib")
     model_lr = joblib.load("logisticregression.joblib")
     model_gbc = joblib.load("gbcmodel.joblib")
@@ -22,8 +22,8 @@ except Exception as e:
     embedder = DummyModel()
     print(f"Model Loading Error: {e}. Using dummy models.")
 
-# --- SHARED HELPERS (clean_text is unchanged) ---
-_DEBUG = False 
+# --- SHARED HELPERS ---
+_DEBUG = False # Set to True for detailed logs
 
 def clean_text(t: Any) -> str:
     """Cleans text for NLP processing."""
@@ -36,6 +36,7 @@ def _build_input_df(claim: Dict[str, Any], model_reference: Pipeline) -> pd.Data
     """
     Builds the standardized input DataFrame required by all model pipelines.
     Includes manual OHE for critical categorical features.
+    The final cleanup to float/fillna(0) is handled in _calculate_base_score.
     """
     df = pd.DataFrame([claim])
     
@@ -50,10 +51,39 @@ def _build_input_df(claim: Dict[str, Any], model_reference: Pipeline) -> pd.Data
         # Fallback for dummy models
         expected_features = [c for c in df.columns if c not in ("claim_description", "adjuster_notes", "notes", "text_all", "policy_number", "policy_bind_date", "incident_date", "insured_zip", "insured_occupation", "insured_hobbies", "insured_relationship", "incident_city", "incident_location")]
 
-    # --- MANUAL ONE-HOT ENCODING (OHE) --- (UNCHANGED)
-    # ... (OHE logic for policy_state, insured_sex, incident_severity, collision_type, insured_education_level)
-    # ... 
+    # --- MANUAL ONE-HOT ENCODING (OHE) ---
+    
+    # A. policy_state
+    for state in ['CA', 'WA', 'AZ']: # Add all relevant states from training here
+        col_name = f'policy_state_{state}'
+        df[col_name] = np.where(df['policy_state'] == state, 1, 0)
+    
+    # B. insured_sex
+    for sex in ['MALE', 'FEMALE']:
+        col_name = f'insured_sex_{sex}'
+        df[col_name] = np.where(df['insured_sex'] == sex, 1, 0)
 
+    # C. incident_severity
+    for severity in ['Total Loss', 'Major Damage']:
+        col_name = f'incident_severity_{severity}'.replace(' ', '_')
+        df[col_name] = np.where(df['incident_severity'] == severity, 1, 0)
+        
+    # D. collision_type (Handle missing/unseen values)
+    collision_types = ['Front Collision', 'Side Collision', 'Rear Collision']
+    for c_type in collision_types:
+        col_name = f'collision_type_{c_type}'.replace(' ', '_')
+        # Check if the column exists in the final feature list before creating it (optional check)
+        if col_name in expected_features:
+             # Ensure '?' is treated as 0 (no match)
+            df[col_name] = np.where(df['collision_type'] == c_type, 1, 0)
+
+    # E. insured_education_level
+    for edu in ['JD', 'Masters', 'PhD']:
+        col_name = f'insured_education_level_{edu}'
+        df[col_name] = np.where(df['insured_education_level'] == edu, 1, 0)
+        
+    # --- END OF MANUAL OHE ---
+    
     # 3. Align Columns: ensure all expected features are present (now including OHE columns)
     for c in expected_features:
         if c not in df.columns: 
@@ -63,35 +93,41 @@ def _build_input_df(claim: Dict[str, Any], model_reference: Pipeline) -> pd.Data
     df = df[expected_features]
 
     # 5. Imputation and Final Type Conversion
-    # -----------------------------------------------------------------
-    # *** REMOVE THIS SECTION! *** # This manual imputation is conflicting with the robust cleanup in _calculate_base_score.
-    # -----------------------------------------------------------------
-    # for c in df.columns:
-    #     # A. Force conversion to numeric (OHE columns and existing numerical features)
-    #     # Non-numeric columns will become NaN here.
-    #     df[c] = pd.to_numeric(df[c], errors='coerce')
-    #     
-    #     # B. Impute NaNs with 0 (since OHE columns and missing numerical values should be 0)
-    #     df[c] = df[c].fillna(0).astype(float)
+    # *** REMOVED: The conflicting type conversion block is removed. ***
             
     return df
-    # -----------------------------------------------------------------
-
 
 def _calculate_base_score(claim: Dict[str, Any], model: Pipeline) -> tuple[float, float]:
     """Calculates text score and final prediction probability for any given model."""
     
-    # ... (code for text_score calculation - UNCHANGED)
-    
-    # 2. Build and Align DataFrame
-    df = _build_input_df(claim, model) # Returns DataFrame with OHE, but potentially mixed types
+    # 1. Extract text and calculate Text Suspicion Score
+    text = ""
+    for key in ("claim_description","adjuster_notes","notes","text_all"):
+        if key in claim and claim[key] not in (None, ""):
+            text = claim[key]
+            break
+            
+    cleaned = clean_text(text)
+    text_score = 0.0
+    if cleaned != "":
+        try:
+            emb = embedder.encode([cleaned], show_progress_bar=False)
+            emb = np.asarray(emb)
+            if hasattr(text_model, "predict_proba"):
+                text_score = float(text_model.predict_proba(emb)[:, 1][0])
+            else:
+                text_score = float(text_model.predict(emb)[0])
+        except Exception:
+            text_score = 0.0
 
-    # 3. Assign the calculated text_suspicion_score (UNCHANGED)
+    # 2. Build and Align DataFrame
+    df = _build_input_df(claim, model)
+
+    # 3. Assign the calculated text_suspicion_score
     if "text_suspicion_score" in df.columns:
         df["text_suspicion_score"] = text_score
 
     # --- FIX: Ensure the final DataFrame is strictly numerical and clean ---
-    # We RELY solely on this block for final data integrity.
     try:
         # 1. Convert the entire DataFrame to numeric types (Coerce non-numbers to NaN)
         df = df.apply(pd.to_numeric, errors='coerce') 
@@ -105,15 +141,13 @@ def _calculate_base_score(claim: Dict[str, Any], model: Pipeline) -> tuple[float
         raise RuntimeError(f"Data cleanup failed before prediction: {e}")
     # -----------------------------------------------------------------------
 
-    # 4. Predict (UNCHANGED)
+    # 4. Predict
     try:
         proba = float(model.predict_proba(df)[0, 1])
     except Exception as e:
         raise RuntimeError(f"Model prediction error: {e}")
 
     return proba, text_score
-
-# ... (Rest of the file is UNCHANGED)
 
 def _apply_threshold_logic(proba: float, threshold: float, high_risk_limit: float) -> tuple[str, str]:
     """Applies standardized risk tier logic."""
@@ -176,7 +210,3 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
             "risk_level": risk,
             "decision": decision,
             "threshold_used": THRESHOLD}
-
-
-
-
