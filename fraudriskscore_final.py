@@ -31,7 +31,7 @@ try:
     with open("finalthresholdvalue.txt") as f:
         GLOBAL_THRESHOLD = float(f.read().strip())
 except:
-    GLOBAL_THRESHOLD = 0.3
+    GLOBAL_THRESHOLD = 0.2
 
 # small debug flag (switch to True to print df/dtypes into logs)
 _DEBUG = False
@@ -157,6 +157,7 @@ def fraudriskscore_LR(claim: dict) -> dict:
     
 def fraudriskscore_GBC(claim: dict) -> dict:
     pass
+
 
 
 
