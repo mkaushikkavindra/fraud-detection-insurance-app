@@ -77,7 +77,7 @@ else:
 # --- NEW: Model Selection in Sidebar ---
 st.sidebar.header("Model Selection")
 model_options = {
-    "Random Forest Classifier (RFC)": fraudriskscore_final, # RFC is aliased as fraudriskscore_final in the original code
+    "Random Forest Classifier (RFC)": fraudriskscore_RFC, 
     "Gradient Boosting Classifier (GBC)": fraudriskscore_GBC,
     "Logistic Regression (LR)": fraudriskscore_LR,
 }
@@ -290,4 +290,5 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred during prediction:")
             st.exception(e)
+
 
