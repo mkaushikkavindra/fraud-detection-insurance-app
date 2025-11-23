@@ -22,6 +22,27 @@ except Exception as e:
     embedder = DummyModel()
     print(f"Model Loading Error: {e}. Using dummy models.")
 
+# --- TEMPORARY DEBUG CODE TO PRINT FEATURE NAMES ---
+try:
+    print("\n--- RFC (final_model) Required Feature Names ---")
+    print(list(final_model.feature_names_in_))
+    
+    print("\n--- LR (model_lr) Required Feature Names ---")
+    print(list(model_lr.feature_names_in_))
+    
+    print("\n--- GBC (model_gbc) Required Feature Names ---")
+    print(list(model_gbc.feature_names_in_))
+    
+    # We can also find the union of all required features
+    all_required_features = set(final_model.feature_names_in_) | set(model_lr.feature_names_in_) | set(model_gbc.feature_names_in_)
+    print("\n--- UNION OF ALL REQUIRED FEATURES (TOTAL SET) ---")
+    print(list(all_required_features))
+    
+except Exception as e:
+    # This might run if the models failed to load and are set to DummyModel
+    print(f"DEBUG: Could not print feature names. Model loading issue: {e}")
+# --------------------------------------------------------
+
 # --- SHARED HELPERS ---
 _DEBUG = False # Set to True for detailed logs
 
@@ -213,6 +234,7 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
             "risk_level": risk,
             "decision": decision,
             "threshold_used": THRESHOLD}
+
 
 
 
