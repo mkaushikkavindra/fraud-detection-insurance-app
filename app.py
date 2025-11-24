@@ -142,9 +142,9 @@ def process_claims_batch(df_claims: pd.DataFrame, scoring_func: callable) -> pd.
 st.header("Claim Analysis Input")
 input_mode = st.radio(
     "Choose Input Method",
-    ('Single Claim Entry', 'Batch File Upload'),
+    ('Single Claim Entry', 'Batch File Upload','Analyze Proof Images'),
     horizontal=True,
-    help="Select Single Entry for manual data or Batch Upload for analyzing multiple claims from a CSV file."
+    help="Select Single Entry for manual data or Batch Upload for analyzing multiple claims from a CSV file or Analyze the proof images."
 )
 st.markdown("---")
 
@@ -362,3 +362,4 @@ elif input_mode == 'Batch File Upload':
         except Exception as e:
             st.error(f"Error processing the uploaded file. Please check file format and columns.")
             st.exception(e)
+
