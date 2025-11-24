@@ -363,3 +363,6 @@ elif input_mode == 'Batch File Upload':
             st.error(f"Error processing the uploaded file. Please check file format and columns.")
             st.exception(e)
 
+elif input_mode == 'Analyze Proof Images':
+    pass
+
