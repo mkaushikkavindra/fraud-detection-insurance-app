@@ -364,5 +364,6 @@ elif input_mode == 'Batch File Upload':
             st.exception(e)
 
 elif input_mode == 'Analyze Proof Images':
-    pass
+    st.subheader("Upload the given proof images for analysis")
+
 
