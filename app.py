@@ -3,67 +3,34 @@ import streamlit as st
 # Import all three scoring functions from the module
 from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC, fraudriskscore_final
 import pandas as pd, datetime
+import io
+from typing import Dict, Any
 
 st.title("Vehicle Insurance Fraud Detection")
 
-# --- Helper function for smoke check ---
+# --- Helper function for smoke check (UNCHANGED) ---
 def smoke_check():
+    # ... (sample data dictionary) ...
     sample = {
-    "months_as_customer": 48,
-    "age": 35,
-    "policy_number": "12345",
-    "policy_bind_date": "2018-07-15",
-    "policy_state": "CA",
-    "policy_csl": "250/500",
-    "policy_deductable": 1000,
-    "policy_annual_premium": 1200.0,
-    "umbrella_limit": 0,
-    "insured_zip": 90001,
-    "insured_sex": "MALE",
-    "insured_education_level": "College",
-    "insured_occupation": "Engineer",
-    "insured_hobbies": "reading",
-    "insured_relationship": "husband",
-    "capital-gains": 0,
-    "capital-loss": 0,
-    "incident_date": "2023-02-10",
-    "incident_type": "Rear-End Collision",
-    "collision_type": "Rear Collision",
-    "incident_severity": "Major Damage",
-    "authorities_contacted": "Police",
-    "incident_state": "CA",
-    "incident_city": "Los Angeles",
-    "incident_location": "Main Street",
-    "incident_hour_of_the_day": 14,
-    "number_of_vehicles_involved": 2,
-    "property_damage": "YES",
-    "bodily_injuries": 1,
-    "witnesses": 1,
-    "police_report_available": "YES",
-    "total_claim_amount": 15000,
-    "injury_claim": 5000,
-    "property_claim": 8000,
-    "vehicle_claim": 2000,
-    "auto_make": "Honda",
-    "auto_model": "Civic",
-    "auto_year": 2019,
-    "claim_to_premium_ratio": 12.5,
-    "injury_ratio": 0.33,
-    "property_ratio": 0.53,
-    "vehicle_ratio": 0.14,
-    "daysdiff": 9000,
-    "police_report_flag": 1,
-    "property_damage_flag": 1,
-    "authorities_contacted_flag": 1,
-    "injury_flag": 1,
-    "multiple_vehicles_flag": 1,
+    "months_as_customer": 48, "age": 35, "policy_number": "12345", "policy_bind_date": "2018-07-15",
+    "policy_state": "CA", "policy_csl": "250/500", "policy_deductable": 1000, "policy_annual_premium": 1200.0,
+    "umbrella_limit": 0, "insured_zip": 90001, "insured_sex": "MALE", "insured_education_level": "College",
+    "insured_occupation": "Engineer", "insured_hobbies": "reading", "insured_relationship": "husband",
+    "capital-gains": 0, "capital-loss": 0, "incident_date": "2023-02-10", "incident_type": "Rear-End Collision",
+    "collision_type": "Rear Collision", "incident_severity": "Major Damage", "authorities_contacted": "Police",
+    "incident_state": "CA", "incident_city": "Los Angeles", "incident_location": "Main Street",
+    "incident_hour_of_the_day": 14, "number_of_vehicles_involved": 2, "property_damage": "YES",
+    "bodily_injuries": 1, "witnesses": 1, "police_report_available": "YES", "total_claim_amount": 15000,
+    "injury_claim": 5000, "property_claim": 8000, "vehicle_claim": 2000, "auto_make": "Honda",
+    "auto_model": "Civic", "auto_year": 2019, "claim_to_premium_ratio": 12.5, "injury_ratio": 0.33,
+    "property_ratio": 0.53, "vehicle_ratio": 0.14, "daysdiff": 9000, "police_report_flag": 1,
+    "property_damage_flag": 1, "authorities_contacted_flag": 1, "injury_flag": 1, "multiple_vehicles_flag": 1,
     "claim_description": "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain."
 }
     try:
-        # Check all models for robustness
         fraudriskscore_RFC(sample)
         fraudriskscore_LR(sample)
-        out = fraudriskscore_GBC(sample) # Use GBC as the final check output
+        out = fraudriskscore_GBC(sample)
         return True, out
     except Exception as e:
         return False, str(e)
@@ -74,7 +41,7 @@ if ok:
 else:
     st.sidebar.error(f"Model load/predict failed. Error: {info}")
 
-# --- NEW: Model Selection in Sidebar ---
+# --- MODEL SELECTION (UNCHANGED) ---
 st.sidebar.header("Model Selection")
 model_options = {
     "Random Forest Classifier (RFC)": fraudriskscore_RFC,
@@ -84,208 +51,298 @@ model_options = {
 selected_model_name = st.sidebar.selectbox(
     "Select Model for Prediction",
     list(model_options.keys()),
-    index=0, # RFC is the default
+    index=0,
     help="GBC is optimized for F1/Recall. LR is a simple baseline. RFC is a general safety net."
 )
 selected_model_function = model_options[selected_model_name]
-# ---------------------------------------
+# -----------------------------------
 
-st.header("Submit a New Claim for Analysis")
-st.write("Enter the required details to get a FRAUD RISK SCORE.")
+# --- NEW BATCH PROCESSING FUNCTION ---
 
-with st.form(key="claim_values"):
-    # --- Helper lists for selectboxes ---
-    yes_no_options = ["NO", "YES"]
-    state_options = ["CA", "WA", "AZ", "NV", "OR", "TX", "FL", "NY", "IL", "PA", "OH", "IN"]
-    csl_options = ["100/300", "250/500", "500/1000", "1000/2000"]
-    sex_options = ["MALE", "FEMALE", "OTHER"]
-    education_options = ["Associate", "College", "High School", "JD", "MD", "Masters", "PhD"]
-    severity_options = ["Major Damage", "Minor Damage", "Total Loss", "Trivial"]
-    authorities_options = ["Police", "Fire", "Ambulance", "Other", "None"]
-    incident_type_options = ["Single Vehicle Collision", "Multi-vehicle Collision", "Parked Car", "Rear-End Collision", "Side Collision"]
+def process_claims_batch(df_claims: pd.DataFrame, scoring_func: callable) -> pd.DataFrame:
+    """Processes a DataFrame of claims using the selected scoring function."""
+    results = []
     
-    # --- Form Layout ---
-    st.subheader("1. Policy & Insured Details")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        policy_number = st.text_input("Policy Number *", "12345")
-        policy_state = st.selectbox("Policy State *", state_options)
-        policy_csl = st.selectbox("Policy CSL *", csl_options)
-        policy_bind_date = st.date_input("Policy Bind Date *", datetime.date(2018, 7, 15))
+    # 1. Recalculate engineered features (flags, ratios, daysdiff) for batch processing
+    # Note: These features are expected by the scoring functions' input dict structure.
     
-    with col2:
-        months_as_customer = st.number_input("Months as Customer *", min_value=0, value=48)
-        age = st.number_input("Insured Age *", min_value=16, max_value=100, value=35)
-        insured_sex = st.selectbox("Insured Sex *", sex_options)
-        insured_education_level = st.selectbox("Insured Education *", education_options, index=1)
+    def calculate_features(row: Dict[str, Any]) -> Dict[str, Any]:
+        
+        # Date Handling
+        try:
+            policy_bind_date = pd.to_datetime(row['policy_bind_date'])
+            incident_date = pd.to_datetime(row['incident_date'])
+            row['daysdiff'] = (incident_date - policy_bind_date).days
+        except:
+            row['daysdiff'] = 0 # Default to 0 if dates are malformed
 
-    with col3:
-        policy_deductable = st.number_input("Policy Deductible *", min_value=0, step=100, value=1000)
-        policy_annual_premium = st.number_input("Annual Premium *", min_value=0.0, format="%.2f", value=1200.0)
-        umbrella_limit = st.number_input("Umbrella Limit", min_value=0, step=100000, value=0)
-        insured_zip = st.text_input("Insured Zip Code *", "90001") # Text input for zips
+        # Ratio Handling
+        total_claim = row.get('total_claim_amount', 0)
+        annual_premium = row.get('policy_annual_premium', 0)
+        
+        safe_total = total_claim if total_claim > 0 else 1.0
+        safe_premium = annual_premium if annual_premium > 0 else 1.0
 
-    st.subheader("2. Insured's Profile & Financials")
-    col1, col2, col3 = st.columns(3)
+        row['claim_to_premium_ratio'] = total_claim / safe_premium
+        row['injury_ratio'] = row.get('injury_claim', 0) / safe_total
+        row['property_ratio'] = row.get('property_claim', 0) / safe_total
+        row['vehicle_ratio'] = row.get('vehicle_claim', 0) / safe_total
+        
+        # Flag Handling (Assuming YES/NO inputs are standardized to strings)
+        row['police_report_flag'] = 1 if str(row.get('police_report_available')).upper() == "YES" else 0
+        row['property_damage_flag'] = 1 if str(row.get('property_damage')).upper() == "YES" else 0
+        row['authorities_contacted_flag'] = 1 if str(row.get('authorities_contacted')).upper() not in ("NONE", "NAN") else 0
+        row['injury_flag'] = 1 if row.get('bodily_injuries', 0) > 0 else 0
+        row['multiple_vehicles_flag'] = 1 if row.get('number_of_vehicles_involved', 0) > 1 else 0
+        
+        return row
+        
+    df_claims = df_claims.apply(calculate_features, axis=1, result_type='expand')
     
-    with col1:
-        insured_occupation = st.text_input("Insured Occupation", "Engineer")
-        insured_hobbies = st.text_input("Insured Hobbies", "reading")
-        insured_relationship = st.text_input("Insured Relationship", "husband")
-    with col2:
-        capital_gains = st.number_input("Capital Gains", format="%.2f", value=0.0)
-    with col3:
-        capital_loss = st.number_input("Capital Loss", format="%.2f", value=0.0)
-
-
-    st.subheader("3. Incident & Claim Details")
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        incident_date = st.date_input("Incident Date *", datetime.date(2023, 2, 10))
-        incident_type = st.selectbox("Incident Type *", incident_type_options, index=3)
-        collision_type = st.selectbox("Collision Type *", ["Rear Collision", "Side Collision", "Front Collision", "?"], index=0)
-        incident_severity = st.selectbox("Incident Severity *", severity_options, index=0)
-
-    with col2:
-        incident_state = st.selectbox("Incident State *", state_options)
-        incident_city = st.text_input("Incident City", "Los Angeles")
-        incident_location = st.text_input("Incident Location (Street)", "Main Street")
-        incident_hour_of_the_day = st.number_input("Incident Hour (0-23) *", min_value=0, max_value=23, value=14)
-
-    with col3:
-        authorities_contacted = st.selectbox("Authorities Contacted", authorities_options)
-        number_of_vehicles_involved = st.number_input("Vehicles Involved *", min_value=1, value=2)
-        property_damage = st.selectbox("Property Damage? *", yes_no_options, index=1)
-        police_report_available = st.selectbox("Police Report Available? *", yes_no_options, index=1)
-
-
-    st.subheader("4. Injuries & Financials")
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        bodily_injuries = st.number_input("Bodily Injuries (count) *", min_value=0, value=1)
-        witnesses = st.number_input("Witnesses (count) *", min_value=0, value=1)
-    with col2:
-        total_claim_amount = st.number_input("Total Claim Amount *", min_value=0.0, format="%.2f", value=15000.0)
-    with col3:
-        injury_claim = st.number_input("Injury Claim Amount *", min_value=0.0, format="%.2f", value=5000.0)
-    with col4:
-        property_claim = st.number_input("Property Claim Amount *", min_value=0.0, format="%.2f", value=8000.0)
-        vehicle_claim = st.number_input("Vehicle Claim Amount *", min_value=0.0, format="%.2f", value=2000.0)
-
-    st.subheader("5. Vehicle & Description")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        auto_make = st.text_input("Auto Make", "Honda")
-    with col2:
-        auto_model = st.text_input("Auto Model", "Civic")
-    with col3:
-        auto_year = st.number_input("Auto Year", min_value=1950, max_value=datetime.date.today().year + 1, value=2019)
-
-    claim_description = st.text_area("Claim Description *", "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain.")
-    
-    # --- Submit Button ---
-    submitted = st.form_submit_button("Analyze Claim for Fraud")
-
-# POST-SUBMISSION LOGIC
-# -----------------------------------------------------------------
-if submitted:
-    st.header("Analysis Results")
-    st.subheader(f"Model Used: **{selected_model_name}**") # Display which model was used
-    
-    with st.spinner(f"Running fraud detection model ({selected_model_name})..."):
-        try:          
-            safe_total_claim = total_claim_amount if total_claim_amount > 0 else 1.0
-            safe_annual_premium = policy_annual_premium if policy_annual_premium > 0 else 1.0
-
-            # Feature Engineering 
-            claim_to_premium_ratio = total_claim_amount / safe_annual_premium
-            injury_ratio = injury_claim / safe_total_claim
-            property_ratio = property_claim / safe_total_claim
-            vehicle_ratio = vehicle_claim / safe_total_claim
-
-            daysdiff = (incident_date - policy_bind_date).days
+    # 2. Score each claim
+    for index, row in df_claims.iterrows():
+        try:
+            claim_dict = row.to_dict()
+            score_output = scoring_func(claim_dict)
             
-            police_report_flag = 1 if police_report_available == "YES" else 0
-            property_damage_flag = 1 if property_damage == "YES" else 0
-            authorities_contacted_flag = 1 if authorities_contacted != "None" else 0
-            injury_flag = 1 if bodily_injuries > 0 else 0
-            multiple_vehicles_flag = 1 if number_of_vehicles_involved > 1 else 0
+            # Combine original claim data with prediction results
+            results.append({**row, 
+                            "Fraud Risk Score (%)": score_output['fraud_risk_score'] * 100,
+                            "Risk Level": score_output['risk_level'],
+                            "Decision": score_output['decision'],
+                            "Text Suspicion Score (%)": score_output['text_suspicion_score'] * 100,
+                            "Model Threshold Used": score_output['threshold_used']
+                           })
+        except Exception as e:
+            # Handle claims that fail prediction individually
+            results.append({**row, 
+                            "Fraud Risk Score (%)": None,
+                            "Risk Level": "ERROR",
+                            "Decision": f"Prediction Failed: {str(e)[:50]}...",
+                            "Text Suspicion Score (%)": None,
+                            "Model Threshold Used": None
+                           })
 
-            final_claim_data = {
-                "months_as_customer": months_as_customer,
-                "age": age,
-                "policy_number": policy_number,
-                "policy_bind_date": str(policy_bind_date), 
-                "policy_state": policy_state,
-                "policy_csl": policy_csl,
-                "policy_deductable": policy_deductable,
-                "policy_annual_premium": policy_annual_premium,
-                "umbrella_limit": umbrella_limit,
-                "insured_zip": insured_zip,
-                "insured_sex": insured_sex,
-                "insured_education_level": insured_education_level,
-                "insured_occupation": insured_occupation,
-                "insured_hobbies": insured_hobbies,
-                "insured_relationship": insured_relationship,
-                "capital-gains": capital_gains,
-                "capital-loss": capital_loss,
-                "incident_date": str(incident_date), 
-                "incident_type": incident_type,
-                "collision_type": collision_type,
-                "incident_severity": incident_severity,
-                "authorities_contacted": authorities_contacted,
-                "incident_state": incident_state,
-                "incident_city": incident_city,
-                "incident_location": incident_location,
-                "incident_hour_of_the_day": incident_hour_of_the_day,
-                "number_of_vehicles_involved": number_of_vehicles_involved,
-                "property_damage": property_damage,
-                "bodily_injuries": bodily_injuries,
-                "witnesses": witnesses,
-                "police_report_available": police_report_available,
-                "total_claim_amount": total_claim_amount,
-                "injury_claim": injury_claim,
-                "property_claim": property_claim,
-                "vehicle_claim": vehicle_claim,
-                "auto_make": auto_make,
-                "auto_model": auto_model,
-                "auto_year": auto_year,
-                "claim_description": claim_description,
+    return pd.DataFrame(results)
+
+# --- APPLICATION INPUT SELECTION ---
+st.header("Claim Analysis Input")
+input_mode = st.radio(
+    "Choose Input Method",
+    ('Single Claim Entry', 'Batch File Upload'),
+    horizontal=True,
+    help="Select Single Entry for manual data or Batch Upload for analyzing multiple claims from a CSV file."
+)
+st.markdown("---")
+
+
+if input_mode == 'Single Claim Entry':
+    st.subheader("Enter Single Claim Details")
+    # --- The original form block starts here ---
+    with st.form(key="claim_values"):
+        # --- Helper lists (UNCHANGED) ---
+        yes_no_options = ["NO", "YES"]
+        state_options = ["CA", "WA", "AZ", "NV", "OR", "TX", "FL", "NY", "IL", "PA", "OH", "IN"]
+        csl_options = ["100/300", "250/500", "500/1000", "1000/2000"]
+        sex_options = ["MALE", "FEMALE", "OTHER"]
+        education_options = ["Associate", "College", "High School", "JD", "MD", "Masters", "PhD"]
+        severity_options = ["Major Damage", "Minor Damage", "Total Loss", "Trivial"]
+        authorities_options = ["Police", "Fire", "Ambulance", "Other", "None"]
+        incident_type_options = ["Single Vehicle Collision", "Multi-vehicle Collision", "Parked Car", "Rear-End Collision", "Side Collision"]
+        
+        # --- Form Layout ---
+        st.subheader("1. Policy & Insured Details")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            policy_number = st.text_input("Policy Number *", "12345")
+            policy_state = st.selectbox("Policy State *", state_options)
+            policy_csl = st.selectbox("Policy CSL *", csl_options)
+            policy_bind_date = st.date_input("Policy Bind Date *", datetime.date(2018, 7, 15))
+        
+        with col2:
+            months_as_customer = st.number_input("Months as Customer *", min_value=0, value=48)
+            age = st.number_input("Insured Age *", min_value=16, max_value=100, value=35)
+            insured_sex = st.selectbox("Insured Sex *", sex_options)
+            insured_education_level = st.selectbox("Insured Education *", education_options, index=1)
+
+        with col3:
+            policy_deductable = st.number_input("Policy Deductible *", min_value=0, step=100, value=1000)
+            policy_annual_premium = st.number_input("Annual Premium *", min_value=0.0, format="%.2f", value=1200.0)
+            umbrella_limit = st.number_input("Umbrella Limit", min_value=0, step=100000, value=0)
+            insured_zip = st.text_input("Insured Zip Code *", "90001")
+
+        st.subheader("2. Insured's Profile & Financials")
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            insured_occupation = st.text_input("Insured Occupation", "Engineer")
+            insured_hobbies = st.text_input("Insured Hobbies", "reading")
+            insured_relationship = st.text_input("Insured Relationship", "husband")
+        with col2:
+            capital_gains = st.number_input("Capital Gains", format="%.2f", value=0.0)
+        with col3:
+            capital_loss = st.number_input("Capital Loss", format="%.2f", value=0.0)
+
+
+        st.subheader("3. Incident & Claim Details")
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            incident_date = st.date_input("Incident Date *", datetime.date(2023, 2, 10))
+            incident_type = st.selectbox("Incident Type *", incident_type_options, index=3)
+            collision_type = st.selectbox("Collision Type *", ["Rear Collision", "Side Collision", "Front Collision", "?"], index=0)
+            incident_severity = st.selectbox("Incident Severity *", severity_options, index=0)
+
+        with col2:
+            incident_state = st.selectbox("Incident State *", state_options)
+            incident_city = st.text_input("Incident City", "Los Angeles")
+            incident_location = st.text_input("Incident Location (Street)", "Main Street")
+            incident_hour_of_the_day = st.number_input("Incident Hour (0-23) *", min_value=0, max_value=23, value=14)
+
+        with col3:
+            authorities_contacted = st.selectbox("Authorities Contacted", authorities_options)
+            number_of_vehicles_involved = st.number_input("Vehicles Involved *", min_value=1, value=2)
+            property_damage = st.selectbox("Property Damage? *", yes_no_options, index=1)
+            police_report_available = st.selectbox("Police Report Available? *", yes_no_options, index=1)
+
+
+        st.subheader("4. Injuries & Financials")
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            bodily_injuries = st.number_input("Bodily Injuries (count) *", min_value=0, value=1)
+            witnesses = st.number_input("Witnesses (count) *", min_value=0, value=1)
+        with col2:
+            total_claim_amount = st.number_input("Total Claim Amount *", min_value=0.0, format="%.2f", value=15000.0)
+        with col3:
+            injury_claim = st.number_input("Injury Claim Amount *", min_value=0.0, format="%.2f", value=5000.0)
+        with col4:
+            property_claim = st.number_input("Property Claim Amount *", min_value=0.0, format="%.2f", value=8000.0)
+            vehicle_claim = st.number_input("Vehicle Claim Amount *", min_value=0.0, format="%.2f", value=2000.0)
+
+        st.subheader("5. Vehicle & Description")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            auto_make = st.text_input("Auto Make", "Honda")
+        with col2:
+            auto_model = st.text_input("Auto Model", "Civic")
+        with col3:
+            auto_year = st.number_input("Auto Year", min_value=1950, max_value=datetime.date.today().year + 1, value=2019)
+
+        claim_description = st.text_area("Claim Description *", "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain.")
+        
+        submitted = st.form_submit_button("Analyze Claim for Fraud")
+
+    # POST-SUBMISSION LOGIC (Single Claim)
+    if submitted:
+        st.header("Analysis Results")
+        st.subheader(f"Model Used: **{selected_model_name}**")
+        
+        with st.spinner(f"Running fraud detection model ({selected_model_name})..."):
+            try:          
+                # Recalculate engineered features for single submission
+                safe_total_claim = total_claim_amount if total_claim_amount > 0 else 1.0
+                safe_annual_premium = policy_annual_premium if policy_annual_premium > 0 else 1.0
+
+                claim_to_premium_ratio = total_claim_amount / safe_annual_premium
+                injury_ratio = injury_claim / safe_total_claim
+                property_ratio = property_claim / safe_total_claim
+                vehicle_ratio = vehicle_claim / safe_total_claim
+
+                daysdiff = (incident_date - policy_bind_date).days
                 
-                "claim_to_premium_ratio": claim_to_premium_ratio,
-                "injury_ratio": injury_ratio,
-                "property_ratio": property_ratio,
-                "vehicle_ratio": vehicle_ratio,
-                "daysdiff": daysdiff,
-                "police_report_flag": police_report_flag,
-                "property_damage_flag": property_damage_flag,
-                "authorities_contacted_flag": authorities_contacted_flag,
-                "injury_flag": injury_flag,
-                "multiple_vehicles_flag": multiple_vehicles_flag
-            }
+                police_report_flag = 1 if police_report_available == "YES" else 0
+                property_damage_flag = 1 if property_damage == "YES" else 0
+                authorities_contacted_flag = 1 if authorities_contacted != "None" else 0
+                injury_flag = 1 if bodily_injuries > 0 else 0
+                multiple_vehicles_flag = 1 if number_of_vehicles_involved > 1 else 0
 
-            # --- KEY CHANGE: Call the function based on selection ---
-            result = selected_model_function(final_claim_data)
-            # -------------------------------------------------------
-            
-            st.success("Analysis Complete!")
-            
-            st.subheader(f"Decision: **{result['decision']}**")
-            col1, col2, col3 = st.columns(3)
-            col1.metric("Fraud Risk Score", f"{result['fraud_risk_score'] * 100:.1f}%", 
-                        help=f"The selected model's ({selected_model_name}) overall fraud probability, based on a threshold of {result['threshold_used'] * 100:.1f}%.")
-            col2.metric("Risk Level", result['risk_level'])
-            col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
-                        help="The model's suspicion score based on the claim description text.")
+                final_claim_data = {
+                    "months_as_customer": months_as_customer, "age": age, "policy_number": policy_number,
+                    "policy_bind_date": str(policy_bind_date), "policy_state": policy_state, "policy_csl": policy_csl, 
+                    "policy_deductable": policy_deductable, "policy_annual_premium": policy_annual_premium,
+                    "umbrella_limit": umbrella_limit, "insured_zip": insured_zip, "insured_sex": insured_sex, 
+                    "insured_education_level": insured_education_level, "insured_occupation": insured_occupation, 
+                    "insured_hobbies": insured_hobbies, "insured_relationship": insured_relationship, 
+                    "capital-gains": capital_gains, "capital-loss": capital_loss, "incident_date": str(incident_date), 
+                    "incident_type": incident_type, "collision_type": collision_type, "incident_severity": incident_severity,
+                    "authorities_contacted": authorities_contacted, "incident_state": incident_state, "incident_city": incident_city, 
+                    "incident_location": incident_location, "incident_hour_of_the_day": incident_hour_of_the_day,
+                    "number_of_vehicles_involved": number_of_vehicles_involved, "property_damage": property_damage,
+                    "bodily_injuries": bodily_injuries, "witnesses": witnesses, "police_report_available": police_report_available,
+                    "total_claim_amount": total_claim_amount, "injury_claim": injury_claim, "property_claim": property_claim,
+                    "vehicle_claim": vehicle_claim, "auto_make": auto_make, "auto_model": auto_model, "auto_year": auto_year,
+                    "claim_description": claim_description,
+                    
+                    "claim_to_premium_ratio": claim_to_premium_ratio, "injury_ratio": injury_ratio, 
+                    "property_ratio": property_ratio, "vehicle_ratio": vehicle_ratio, "daysdiff": daysdiff, 
+                    "police_report_flag": police_report_flag, "property_damage_flag": property_damage_flag,
+                    "authorities_contacted_flag": authorities_contacted_flag, "injury_flag": injury_flag,
+                    "multiple_vehicles_flag": multiple_vehicles_flag
+                }
 
-            with st.expander("Show Full JSON Response"):
-                st.json(result)
+                result = selected_model_function(final_claim_data)
+                
+                st.success("Analysis Complete!")
+                
+                st.subheader(f"Decision: **{result['decision']}**")
+                col1, col2, col3 = st.columns(3)
+                col1.metric("Fraud Risk Score", f"{result['fraud_risk_score'] * 100:.1f}%", 
+                            help=f"The selected model's ({selected_model_name}) overall fraud probability, based on a threshold of {result['threshold_used'] * 100:.1f}%.")
+                col2.metric("Risk Level", result['risk_level'])
+                col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
+                            help="The model's suspicion score based on the claim description text.")
+
+                with st.expander("Show Full JSON Response"):
+                    st.json(result)
+                
+                with st.expander("Show Final Data Sent to Model (Debug)"):
+                    st.json(final_claim_data)
+
+            except Exception as e:
+                st.error(f"An error occurred during prediction:")
+                st.exception(e)
             
-            with st.expander("Show Final Data Sent to Model (Debug)"):
-                st.json(final_claim_data)
+elif input_mode == 'Batch File Upload':
+    
+    st.subheader("Upload Claim Data (CSV)")
+    uploaded_file = st.file_uploader(
+        "Upload a CSV file containing claims. Columns must match the required fields.",
+        type="csv"
+    )
+
+    if uploaded_file is not None:
+        try:
+            # Read the file into a DataFrame
+            df_claims = pd.read_csv(uploaded_file)
+            st.success(f"Successfully loaded {len(df_claims)} claims.")
+
+            if len(df_claims) > 0:
+                st.markdown("### 📊 Batch Analysis Preview")
+                st.dataframe(df_claims.head())
+                
+                # Button to start processing
+                if st.button(f"Analyze {len(df_claims)} Claims using {selected_model_name}"):
+                    
+                    with st.spinner(f"Running batch analysis on {len(df_claims)} claims..."):
+                        # Process the batch
+                        df_results = process_claims_batch(df_claims, selected_model_function)
+                        
+                        st.markdown("### Analysis Results")
+                        st.dataframe(df_results)
+                        
+                        # --- Download Option ---
+                        
+                        # Convert DataFrame to CSV in memory
+                        csv_output = df_results.to_csv(index=False).encode('utf-8')
+                        
+                        st.download_button(
+                            label="📥 Download Full Results as CSV",
+                            data=csv_output,
+                            file_name=f'fraud_analysis_results_{selected_model_name}_{datetime.date.today()}.csv',
+                            mime='text/csv',
+                        )
 
         except Exception as e:
-            st.error(f"An error occurred during prediction:")
+            st.error(f"Error processing the uploaded file. Please check file format and columns.")
             st.exception(e)
