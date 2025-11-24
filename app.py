@@ -245,8 +245,8 @@ if input_mode == 'Single Claim Entry':
 
         with col2:
             incident_state = st.selectbox("Incident State *", state_options)
-            incident_city = st.text_input("Incident City", "Los Angeles")
-            incident_location = st.text_input("Incident Location (Street)", "Main Street")
+            incident_city = st.text_input("Incident City", "Chennai")
+            incident_location = st.text_input("Incident Location (Street)", "Mount Road")
             incident_hour_of_the_day = st.number_input("Incident Hour (0-23) *", min_value=0, max_value=23, value=14)
 
         with col3:
@@ -406,6 +406,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
