@@ -364,7 +364,10 @@ elif input_mode == 'Batch File Upload':
             st.exception(e)
 
 elif input_mode == 'Analyze Proof Images':
-    st.subheader("Upload the given proof images for analysis")
+    st.subheader("Coming Soon!")
+    """
+    st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+    """
 
 
