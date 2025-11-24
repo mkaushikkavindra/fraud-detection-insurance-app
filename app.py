@@ -155,7 +155,44 @@ if input_mode == 'Single Claim Entry':
     with st.form(key="claim_values"):
         # --- Helper lists (UNCHANGED) ---
         yes_no_options = ["NO", "YES"]
-        state_options = ["CA", "WA", "AZ", "NV", "OR", "TX", "FL", "NY", "IL", "PA", "OH", "IN"]
+        state_options = [
+    "Tamil Nadu",
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi (National Capital Territory of Delhi)",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry"
+]
         csl_options = ["100/300", "250/500", "500/1000", "1000/2000"]
         sex_options = ["MALE", "FEMALE", "OTHER"]
         education_options = ["Associate", "College", "High School", "JD", "MD", "Masters", "PhD"]
@@ -369,6 +406,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
