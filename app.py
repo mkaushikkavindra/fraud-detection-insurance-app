@@ -5,6 +5,25 @@ from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudris
 import pandas as pd, datetime
 import io
 from typing import Dict, Any
+import datetime
+import time
+
+placeholder_time = st.empty()
+DATE_TIME_FORMAT = "%A, %B %d, %Y | %H:%M:%S"
+
+while True:
+    # 1. Get the current date and time
+    current_time = datetime.datetime.now()
+
+    # 2. Format the time string
+    time_string = current_time.strftime(DATE_TIME_FORMAT)
+
+    # 3. Use the placeholder to display the updated time
+    # st.markdown() is used here to allow for custom formatting (e.g., a larger font size)
+    time_placeholder.markdown(f"### Current: **{time_string}**")
+
+    # 4. Wait for 1 second before updating again
+    time.sleep(1)
 
 st.title("Vehicle Insurance Fraud Detection")
 
@@ -406,6 +425,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
