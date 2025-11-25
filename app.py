@@ -25,7 +25,7 @@ REQUIRED_INPUT_COLUMNS = [
 ]
 # --------------------------------------------------------------------------------------
 
-"""
+commented="""
 # --- Helper function for smoke check (UNCHANGED) ---
 def smoke_check():
     sample = {
@@ -351,14 +351,15 @@ def single_claim_entry():
                 st.exception(e)
 
 def batch_file_upload():
-    #st.subheader("Upload Claim Data (CSV)")
+    commented="""
+    st.subheader("Upload Claim Data (CSV)")
     
-    #with st.expander("📝 Required CSV Columns"):
-        #st.write("Your CSV must contain all of the following columns with matching headers and valid data:")
-        #st.code(", ".join(REQUIRED_INPUT_COLUMNS))
-        #st.markdown(f"**Total Required Columns:** {len(REQUIRED_INPUT_COLUMNS)}")
-        #st.markdown("*Note: The app calculates ratio and flag features internally.*")
-    # ------------------------------------
+    with st.expander("📝 Required CSV Columns"):
+        st.write("Your CSV must contain all of the following columns with matching headers and valid data:")
+        st.code(", ".join(REQUIRED_INPUT_COLUMNS))
+        st.markdown(f"**Total Required Columns:** {len(REQUIRED_INPUT_COLUMNS)}")
+        st.markdown("*Note: The app calculates ratio and flag features internally.*")
+    # ------------------------------------"""
 
     uploaded_file = st.file_uploader(
         "Upload a CSV file",
@@ -371,10 +372,11 @@ def batch_file_upload():
             #st.success(f"Successfully loaded {len(df_claims)} claims.")
 
             if len(df_claims) > 0:
-                #st.markdown("### 📊 Batch Analysis Preview")
-                #st.dataframe(df_claims.head())
+                commented="""
+                st.markdown("### 📊 Batch Analysis Preview")
+                st.dataframe(df_claims.head())
                 
-                #if st.button(f"Analyze {len(df_claims)} Claims using {selected_model_name}"):
+                if st.button(f"Analyze {len(df_claims)} Claims using {selected_model_name}"):"""
                     
                     with st.spinner(f"Running batch analysis on {len(df_claims)} claims..."):
                         df_results = process_claims_batch(df_claims, selected_model_function)
@@ -408,6 +410,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
