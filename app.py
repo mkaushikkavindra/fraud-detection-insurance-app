@@ -25,7 +25,7 @@ REQUIRED_INPUT_COLUMNS = [
 ]
 # --------------------------------------------------------------------------------------
 
-
+"""
 # --- Helper function for smoke check (UNCHANGED) ---
 def smoke_check():
     sample = {
@@ -57,7 +57,7 @@ if ok:
     st.sidebar.success("All models loaded & runnable")
 else:
     st.sidebar.error(f"Model load/predict failed. Error: {info}")
-
+"""
 # --- MODEL SELECTION (UNCHANGED) ---
 st.sidebar.header("Model Selection")
 model_options = {
@@ -408,6 +408,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
