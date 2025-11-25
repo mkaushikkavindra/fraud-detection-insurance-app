@@ -6,7 +6,7 @@ import pandas as pd, datetime
 import io
 from typing import Dict, Any
 
-st.title("Vehicle Insurance Fraud Detection")
+st.title("Car Insurance Fraud Detection")
 
 # --- DEFINITIVE LIST OF REQUIRED USER INPUT COLUMNS (Including ID/text for context) ---
 REQUIRED_INPUT_COLUMNS = [
@@ -354,18 +354,17 @@ if input_mode == 'Single Claim Entry':
             
 elif input_mode == 'Batch File Upload':
     
-    st.subheader("Upload Claim Data (CSV)")
+    #st.subheader("Upload Claim Data (CSV)")
     
-    # --- Guidance for the user (NEW) ---
-    with st.expander("📝 Required CSV Columns"):
-        st.write("Your CSV must contain all of the following columns with matching headers and valid data:")
-        st.code(", ".join(REQUIRED_INPUT_COLUMNS))
-        st.markdown(f"**Total Required Columns:** {len(REQUIRED_INPUT_COLUMNS)}")
-        st.markdown("*Note: The app calculates ratio and flag features internally.*")
+    #with st.expander("📝 Required CSV Columns"):
+        #st.write("Your CSV must contain all of the following columns with matching headers and valid data:")
+        #st.code(", ".join(REQUIRED_INPUT_COLUMNS))
+        #st.markdown(f"**Total Required Columns:** {len(REQUIRED_INPUT_COLUMNS)}")
+        #st.markdown("*Note: The app calculates ratio and flag features internally.*")
     # ------------------------------------
 
     uploaded_file = st.file_uploader(
-        "Upload a CSV file containing one or more claims.",
+        "Upload a CSV file",
         type="csv"
     )
 
@@ -406,6 +405,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
