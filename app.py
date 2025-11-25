@@ -139,7 +139,6 @@ def process_claims_batch(df_claims: pd.DataFrame, scoring_func: callable) -> pd.
     return pd.DataFrame(results)
 
 # --- APPLICATION INPUT SELECTION (Modified) ---
-st.header("Claim Analysis Input")
 input_mode = st.radio(
     "Choose Input Method",
     ('Single Claim Entry', 'Batch File Upload','Analyze Proof Images'),
@@ -405,6 +404,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
