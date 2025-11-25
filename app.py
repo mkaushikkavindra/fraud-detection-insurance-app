@@ -6,9 +6,7 @@ import pandas as pd, datetime
 import io
 from typing import Dict, Any
 
-'''
 st.title("Car Insurance Fraud Detection")
-'''
 
 # --- DEFINITIVE LIST OF REQUIRED USER INPUT COLUMNS (Including ID/text for context) ---
 REQUIRED_INPUT_COLUMNS = [
@@ -410,6 +408,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
