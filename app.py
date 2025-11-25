@@ -371,13 +371,13 @@ elif input_mode == 'Batch File Upload':
     if uploaded_file is not None:
         try:
             df_claims = pd.read_csv(uploaded_file)
-            st.success(f"Successfully loaded {len(df_claims)} claims.")
+            #st.success(f"Successfully loaded {len(df_claims)} claims.")
 
             if len(df_claims) > 0:
-                st.markdown("### 📊 Batch Analysis Preview")
-                st.dataframe(df_claims.head())
+                #st.markdown("### 📊 Batch Analysis Preview")
+                #st.dataframe(df_claims.head())
                 
-                if st.button(f"Analyze {len(df_claims)} Claims using {selected_model_name}"):
+                #if st.button(f"Analyze {len(df_claims)} Claims using {selected_model_name}"):
                     
                     with st.spinner(f"Running batch analysis on {len(df_claims)} claims..."):
                         df_results = process_claims_batch(df_claims, selected_model_function)
@@ -405,6 +405,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
