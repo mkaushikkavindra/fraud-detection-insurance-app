@@ -379,7 +379,7 @@ def batch_file_upload():
                     with st.spinner(f"Running batch analysis on {len(df_claims)} claims..."):
                         df_results = process_claims_batch(df_claims, selected_model_function)
                         
-                        st.markdown("###RESULTS")
+                        st.markdown("**RESULTS**")
                         st.dataframe(df_results)
                         
                         # --- Download Option ---
@@ -408,6 +408,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
