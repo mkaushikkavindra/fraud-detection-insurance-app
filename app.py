@@ -350,11 +350,7 @@ def single_claim_entry():
                 st.error(f"An error occurred during prediction:")
                 st.exception(e)
 
-if input_mode == 'Single Claim Entry':
-    single_claim_entry()
-            
-elif input_mode == 'Batch File Upload':
-    
+def batch_file_upload():
     #st.subheader("Upload Claim Data (CSV)")
     
     #with st.expander("📝 Required CSV Columns"):
@@ -400,12 +396,20 @@ elif input_mode == 'Batch File Upload':
             st.error(f"Error processing the uploaded file. Please check file format and columns.")
             st.exception(e)
 
+if input_mode == 'Single Claim Entry':
+    single_claim_entry()
+            
+elif input_mode == 'Batch File Upload':
+    batch_file_upload()
+    
+
 elif input_mode == 'Analyze Proof Images':
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
