@@ -147,8 +147,7 @@ input_mode = st.radio(
 )
 st.markdown("---")
 
-
-if input_mode == 'Single Claim Entry':
+def single_claim_entry():
     st.subheader("Enter Single Claim Details")
     # --- The original form block starts here ---
     with st.form(key="claim_values"):
@@ -350,6 +349,9 @@ if input_mode == 'Single Claim Entry':
             except Exception as e:
                 st.error(f"An error occurred during prediction:")
                 st.exception(e)
+
+if input_mode == 'Single Claim Entry':
+    single_claim_entry()
             
 elif input_mode == 'Batch File Upload':
     
@@ -404,6 +406,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
