@@ -145,7 +145,7 @@ input_mode = st.radio(
     horizontal=True,
     help="Select Batch Upload for analyzing multiple claims from a CSV file or Single Entry for manual data or Analyze the proof images."
 )
-st.markdown("---")
+st.markdown("--")
 
 def single_claim_entry():
     st.subheader("Enter Single Claim Details")
@@ -408,6 +408,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
