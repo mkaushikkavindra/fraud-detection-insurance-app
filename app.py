@@ -284,7 +284,7 @@ def single_claim_entry():
     if submitted:
         #st.header("Analysis Results")
         
-        with st.spinner(f"Running fraud detection model..."):
+        with st.spinner(f"Running..."):
             try:          
                 safe_total_claim = total_claim_amount if total_claim_amount > 0 else 1.0
                 safe_annual_premium = policy_annual_premium if policy_annual_premium > 0 else 1.0
@@ -375,7 +375,7 @@ def batch_file_upload():
                 #if st.button(f"Analyze {len(df_claims)} Claims using {selected_model_name}"):
                     
                     with st.spinner(f"Running batch analysis on {len(df_claims)} claims..."):
-                        df_results = process_claims_batch(df_claims, selected_model_function)
+                        df_results = process_claims_batch(df_claims, fraudriskscore_ensemble)
                         
                         st.markdown("**RESULTS**")
                         st.dataframe(df_results)
@@ -386,7 +386,7 @@ def batch_file_upload():
                         st.download_button(
                             label="📥 Download Full Results as CSV",
                             data=csv_output,
-                            file_name=f'fraud_analysis_results_{selected_model_name}_{datetime.date.today()}.csv',
+                            file_name=f'fraud_analysis_results_{datetime.date.today()}.csv',
                             mime='text/csv',
                         )
 
@@ -406,6 +406,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
