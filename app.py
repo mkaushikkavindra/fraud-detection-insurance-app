@@ -382,7 +382,7 @@ def batch_file_upload():
                         csv_output = df_results.to_csv(index=False).encode('utf-8')
                         
                         st.download_button(
-                            label="📥 Download Full Results as CSV",
+                            label="Download The Results as CSV",
                             data=csv_output,
                             file_name=f'fraud_analysis_results_{datetime.date.today()}.csv',
                             mime='text/csv',
@@ -404,6 +404,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
