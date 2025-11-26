@@ -38,7 +38,6 @@ def login_form():
                 st.session_state.logged_in = True
                 st.session_state.username = username
                 st.success(f"Welcome, {username}! Access granted.")
-                time.sleep(0.5)
                 # Force a rerun to reload the app, making the secure page visible in the sidebar
                 st.session_state.page = "score_page"  # New session state to manage page navigation
                 st.rerun() 
