@@ -5,6 +5,8 @@ import pandas as pd, datetime
 import io
 from typing import Dict, Any
 
+st.set_page_config(page_title="Fraud Risk Score Calculator")
+
 st.title("Car Insurance Fraud Detection")
 
 # --- DEFINITIVE LIST OF REQUIRED USER INPUT COLUMNS (Including ID/text for context) ---
