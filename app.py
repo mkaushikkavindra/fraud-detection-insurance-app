@@ -1,10 +1,7 @@
 import streamlit as st
 import time
-# 🚨 Import the function from the renamed file
-from secured_fraud_app import run_fraud_app
 
-# --- Configuration & State Initialization ---
-st.set_page_config(page_title="Secure Fraud App", layout="wide")
+st.set_page_config(page_title="Login Page", layout="wide")
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -19,7 +16,6 @@ def logout():
     st.rerun()
 
 def login_form():
-    """Displays the login form."""
     st.title("🔑 Car Insurance Fraud Detection Login")
     st.markdown("Please sign in to access the analysis tool.")
     
@@ -48,7 +44,7 @@ if st.session_state.logged_in:
     st.sidebar.button("Logout", on_click=logout)
     
     # 2. Call the main app function from the separate file
-    run_fraud_app()
+    #run_fraud_app()
 else:
     # 3. Show the login form
     login_form()
