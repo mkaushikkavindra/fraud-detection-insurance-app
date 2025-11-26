@@ -1,4 +1,8 @@
-# app.py
+import os,sys
+
+# Add parent folder to Python path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 import streamlit as st
 from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC,fraudriskscore_final,fraudriskscore_ensemble
 import pandas as pd, datetime
