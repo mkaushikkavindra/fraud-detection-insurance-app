@@ -7,13 +7,7 @@ st.set_page_config(
 )
 
 st.title("🛡️ Fraud Detection System")
-st.write("""
-Welcome to the Fraud Detection Web App.  
+st.write("Welcome to the Fraud Detection Web App.")
 
-Use the link below or the sidebar to access the Fraud Score Calculator.
-""")
-
-st.markdown("### 🔗 Navigation")
-st.markdown("- 👉 [Go to Fraud Score Calculator](./score_calculator)")
-
-st.info("Tip: You can also use the sidebar to navigate to the calculator page.")
+if st.button("Open Fraud Score Calculator"):
+    st.switch_page("pages/score_calculator.py")
