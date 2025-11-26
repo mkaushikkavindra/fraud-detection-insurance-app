@@ -282,7 +282,7 @@ def single_claim_entry():
 
     # POST-SUBMISSION LOGIC (Single Claim - UNCHANGED)
     if submitted:
-        st.header("Analysis Results")
+        #st.header("Analysis Results")
         
         with st.spinner(f"Running fraud detection model..."):
             try:          
@@ -337,11 +337,11 @@ def single_claim_entry():
                 col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
                             help="The model's suspicion score based on the claim description text.")
 
-                with st.expander("Show Full JSON Response"):
-                    st.json(result)
+                #with st.expander("Show Full JSON Response"):
+                    #st.json(result)
                 
-                with st.expander("Show Final Data Sent to Model (Debug)"):
-                    st.json(final_claim_data)
+                #with st.expander("Show Final Data Sent to Model (Debug)"):
+                    #st.json(final_claim_data)
 
             except Exception as e:
                 st.error(f"An error occurred during prediction:")
@@ -406,6 +406,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
