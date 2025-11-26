@@ -178,8 +178,7 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
             "decision": decision,
             "threshold_used": THRESHOLD}
 
-# Alias the original entry point to the RFC version
-fraudriskscore_final = fraudriskscore_RFC
+fraudriskscore_final=fraudriskscore_RFC
 
 def fraudriskscore_ensemble(claim: Dict[str, Any]) -> Dict[str, Any]:
     resultdicts = [
@@ -210,3 +209,4 @@ def fraudriskscore_ensemble(claim: Dict[str, Any]) -> Dict[str, Any]:
     }
     
     return final_ensemble_result
+
