@@ -5,7 +5,7 @@ import time
 st.set_page_config(
     page_title="Secure Fraud App Login", 
     layout="centered",
-    initial_sidebar_state="collapsed" # Hides the sidebar on the login page
+    initial_sidebar_state="expanded" # Hides the sidebar on the login page
 )
 
 # Initialize session state variables
