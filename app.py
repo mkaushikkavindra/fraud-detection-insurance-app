@@ -327,14 +327,13 @@ def single_claim_entry():
                     "multiple_vehicles_flag": multiple_vehicles_flag
                 }
 
-                result = selected_model_function(final_claim_data)
+                result = fraudriskscore_ensemble(final_claim_data)
                 
                 st.success("Analysis Complete!")
                 
                 st.subheader(f"Decision: **{result['decision']}**")
                 col1, col2, col3 = st.columns(3)
-                col1.metric("Fraud Risk Score", f"{result['fraud_risk_score'] * 100:.1f}%", 
-                            help=f"The selected model's ({selected_model_name}) overall fraud probability, based on a threshold of {result['threshold_used'] * 100:.1f}%.")
+                col1.metric("Fraud Risk Score", f"{result['fraud_risk_score'] * 100:.1f}%") #help=f"The selected model's ({selected_model_name}) overall fraud probability, based on a threshold of {result['threshold_used'] * 100:.1f}%.")
                 col2.metric("Risk Level", result['risk_level'])
                 col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
                             help="The model's suspicion score based on the claim description text.")
@@ -408,6 +407,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
