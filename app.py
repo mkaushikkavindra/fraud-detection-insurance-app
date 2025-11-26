@@ -1,8 +1,3 @@
-import os,sys
-
-# Add parent folder to Python path
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
 import streamlit as st
 from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC,fraudriskscore_final,fraudriskscore_ensemble
 import pandas as pd, datetime
@@ -410,3 +405,4 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
