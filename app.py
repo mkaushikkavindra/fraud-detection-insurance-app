@@ -10,4 +10,5 @@ st.title("🛡️ Fraud Detection System")
 st.write("Welcome to the Fraud Detection Web App.")
 
 if st.button("Open Fraud Score Calculator"):
-    st.switch_page("pages/score_calculator.py")
+    st.switch_page("score_calculator")
+
