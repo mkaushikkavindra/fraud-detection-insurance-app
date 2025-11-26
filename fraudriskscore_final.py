@@ -180,3 +180,33 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
 
 # Alias the original entry point to the RFC version
 fraudriskscore_final = fraudriskscore_RFC
+
+def fraudriskscore_ensemble(claim: Dict[str, Any]) -> Dict[str, Any]:
+    resultdicts = [
+        fraudriskscore_RFC(claim),
+        fraudriskscore_LR(claim),
+        fraudriskscore_GBC(claim),
+    ]
+
+    max_score = -1
+    max_result = None
+    
+    for resdict in resultdicts:
+        score = resdict['fraud_risk_score']
+        if score > max_score:
+            max_score = score
+            max_result = resdict
+            
+    if max_result is None:
+        return {"fraud_risk_score": 0.0, "risk_level": "Error", "decision": "Process Failed"}
+        
+    final_ensemble_result = {
+        "fraud_risk_score": max_result['fraud_risk_score'],
+        "text_suspicion_score": max_result['text_suspicion_score'],
+        "risk_level": max_result['risk_level'],
+        "decision": max_result['decision'],
+        "source_model": max_result['model'],
+        "all_model_results": {resdict['model']: resdict for resdict in resultdicts}
+    }
+    
+    return final_ensemble_result
