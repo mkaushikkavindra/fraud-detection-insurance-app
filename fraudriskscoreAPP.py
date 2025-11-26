@@ -4,25 +4,7 @@ import pandas as pd, datetime
 import io
 from typing import Dict, Any
 
-# --- Functions needed for the App File ---
-def logout():
-    """Logs out the user and reruns the script."""
-    # This must be defined here, as st.session_state is shared across files
-    st.session_state.logged_in = False
-    st.session_state.username = None
-    st.info("Logged out successfully.")
-    st.rerun()
-
-# --- SECURITY CHECK (Essential code at the top, NO INDENTATION below) ---
-if 'logged_in' not in st.session_state or not st.session_state.logged_in:
-    st.error("You must be logged in to access the Car Insurance Fraud Detection App. Please return to the Home page to log in.")
-    st.stop() # Stops execution of the rest of the file if not logged in
-# -------------------------------------------------------------------------
-
 st.set_page_config(page_title="Fraud Risk Score Calculator")
-
-st.sidebar.header(f"Logged in as: {st.session_state.username}")
-st.sidebar.button("Logout", on_click=logout)
 
 st.title("Car Insurance Fraud Detection")
 
@@ -423,6 +405,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
