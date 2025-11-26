@@ -6,6 +6,28 @@ from typing import Dict, Any
 
 st.set_page_config(page_title="Fraud Risk Score Calculator")
 
+def login_page():
+    if 'passwords' not in st.session_state:
+        st.session_state.passwords = {"user1": "pass123", "admin": "securepwd"}
+        st.session_state.usernames = list(st.session_state.passwords.keys())
+
+    st.title("Secure Application Login")
+    st.markdown("Please enter your credentials to access the main application.")
+
+    with st.form("login_form"):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        submitted = st.form_submit_button("Log In")
+
+        if submitted:
+            if username in st.session_state.passwords and st.session_state.passwords[username] == password:
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.success("Login successful! Redirecting...")
+                st.rerun()
+            else:
+                st.error("Invalid Username or Password")
+
 st.title("Car Insurance Fraud Detection")
 
 # --- DEFINITIVE LIST OF REQUIRED USER INPUT COLUMNS (Including ID/text for context) ---
@@ -405,4 +427,5 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
