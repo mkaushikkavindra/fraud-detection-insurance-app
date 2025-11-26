@@ -19,7 +19,7 @@ if 'logged_in' not in st.session_state or not st.session_state.logged_in:
 
 from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC,fraudriskscore_final,fraudriskscore_ensemble
 
-st.set_page_config(page_title="Fraud Risk Score Calculator")
+st.set_page_config(page_title="Fraud Risk Score Calculator",initial_sidebar_state="expanded")
 
 st.sidebar.header(f"User: {st.session_state.username}")
 st.sidebar.button("Logout", on_click=logout)
@@ -423,6 +423,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
