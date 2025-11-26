@@ -124,7 +124,6 @@ def process_claims_batch(df_claims: pd.DataFrame, scoring_func: callable) -> pd.
                             "Risk Level": score_output['risk_level'],
                             "Decision": score_output['decision'],
                             "Text Suspicion Score (%)": score_output['text_suspicion_score'] * 100,
-                            "Model Threshold Used": score_output['threshold_used']
                            })
         except Exception as e:
             results.append({**row, 
@@ -132,7 +131,6 @@ def process_claims_batch(df_claims: pd.DataFrame, scoring_func: callable) -> pd.
                             "Risk Level": "ERROR",
                             "Decision": f"Prediction Failed: {str(e)[:50]}...",
                             "Text Suspicion Score (%)": None,
-                            "Model Threshold Used": None
                            })
 
     return pd.DataFrame(results)
@@ -406,6 +404,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
