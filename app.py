@@ -58,7 +58,7 @@ else:
     st.sidebar.error(f"Model load/predict failed. Error: {info}")
 """
 # --- MODEL SELECTION (UNCHANGED) ---
-st.sidebar.header("Model Selection")
+comment="""st.sidebar.header("Model Selection")
 model_options = {
     "Random Forest Classifier (RFC)": fraudriskscore_RFC,
     "Gradient Boosting Classifier (GBC)": fraudriskscore_GBC,
@@ -70,7 +70,7 @@ selected_model_name = st.sidebar.selectbox(
     index=0,
     help="GBC is optimized for F1/Recall. LR is a simple baseline. RFC is a general safety net."
 )
-selected_model_function = model_options[selected_model_name]
+selected_model_function = model_options[selected_model_name]"""
 # -----------------------------------
 
 # --- BATCH PROCESSING FUNCTION (UNCHANGED) ---
@@ -408,6 +408,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
