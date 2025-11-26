@@ -14,8 +14,9 @@ st.set_page_config(
 st.title("🛡️ Fraud Detection System")
 st.write("Welcome to the Fraud Detection Web App.")
 
-if st.button("Open Fraud Score Calculator"):
-    st.switch_page("score_calculator")
+if st.button("Open Fraud Risk Score Calculator"):
+    st.switch_page("Fraud Risk Score Calculator")
+
 
 
 
