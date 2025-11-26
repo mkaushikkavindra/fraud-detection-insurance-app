@@ -283,9 +283,8 @@ def single_claim_entry():
     # POST-SUBMISSION LOGIC (Single Claim - UNCHANGED)
     if submitted:
         st.header("Analysis Results")
-        st.subheader(f"Model Used: **{selected_model_name}**")
         
-        with st.spinner(f"Running fraud detection model ({selected_model_name})..."):
+        with st.spinner(f"Running fraud detection model..."):
             try:          
                 safe_total_claim = total_claim_amount if total_claim_amount > 0 else 1.0
                 safe_annual_premium = policy_annual_premium if policy_annual_premium > 0 else 1.0
@@ -407,6 +406,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
