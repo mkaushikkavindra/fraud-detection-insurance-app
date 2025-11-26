@@ -14,13 +14,10 @@ if 'logged_in' not in st.session_state:
 if 'username' not in st.session_state:
     st.session_state.username = None
 
-# --- Functions ---
 
+# --- Functions ---
 def login_form():
-    """Displays the login form and handles authentication."""
-    
-    # Simple, hardcoded credentials. 
-    # CONSIDER USING STREAMLIT SECRETS/ENVIRONMENT VARIABLES FOR PRODUCTION!
+
     CREDENTIALS = {"user1": "pass123", "admin": "securepwd"}
     
     st.title("🔑 Car Insurance Fraud Detection Login")
@@ -34,30 +31,33 @@ def login_form():
 
         if submitted:
             if username in CREDENTIALS and CREDENTIALS[username] == password:
-                # Set session state on successful login
+
                 st.session_state.logged_in = True
                 st.session_state.username = username
-                st.success(f"Welcome, {username}! Access granted.")
-                # Force a rerun to reload the app, making the secure page visible in the sidebar
-                st.session_state.page = "score_page"  # New session state to manage page navigation
-                st.rerun() 
+
+                st.success(f"Welcome, {username}! Redirecting...")
+                time.sleep(0.5)
+
+                # 🔥 AUTO-REDIRECT to score_page
+                st.experimental_set_query_params(page="score_page")
+                st.rerun()
+
             else:
                 st.error("❌ Invalid Username or Password")
 
-# --- Main Logic (The Login Gate) ---
 
+# --- Main Logic ---
 if st.session_state.logged_in:
-    # If logged in, greet the user and instruct them to navigate
-    st.title(f"🚀 Welcome Back, {st.session_state.username}!")
-    st.markdown("You are logged in. Select **Fraud App** from the sidebar to access the analysis tools.")
-    
-    # Provide a logout button on the landing page
-    if st.button("Logout"):
-        st.session_state.logged_in = False
-        st.session_state.username = None
-        st.info("Logged out successfully.")
+
+    # If URL already has the correct page, do nothing
+    params = st.experimental_get_query_params()
+    if params.get("page") != ["score_page"]:
+        # Redirect only when needed
+        st.experimental_set_query_params(page="score_page")
         st.rerun()
 
+    # Fallback message (will rarely be seen)
+    st.title("Redirecting…")
+
 else:
-    # If not logged in, show the login form
     login_form()
