@@ -45,7 +45,6 @@ def login_form():
                 st.success(f"Welcome, {username}! Please **refresh the browser tab** or click 'Rerun' in Streamlit's corner to load the main app.")
                 # We can't immediately load the secure app content because it's in a different file.
                 # Telling the user to rerun is the clean way to switch contexts without the Multi-Page structure.
-                st.balloons()
             else:
                 st.error("❌ Invalid Username or Password")
 
@@ -67,7 +66,7 @@ if st.session_state.logged_in:
     
     try:
         # Load and execute the secure app content
-        with open("secured_fraud_app.py", "r") as f:
+        with open("fraudriskscoreAPP.py", "r") as f:
             code = f.read()
             # This executes the entire script, making its Streamlit calls.
             # This is generally discouraged in production for security, but solves your problem of avoiding indentation.
