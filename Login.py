@@ -38,7 +38,7 @@ def login_form():
                 st.success(f"Welcome, {username}! Redirecting...")
                 time.sleep(0.3)
 
-                st.switch_page("pages/Home.py")
+                st.switch_page("pages/1_Home.py")
 
             else:
                 st.error("Invalid Username or Password, Try Again!")
