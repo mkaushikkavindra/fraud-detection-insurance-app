@@ -7,6 +7,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+def logout():
+    st.session_state.logged_in = False
+    st.session_state.username = None
+    st.info("Logged out successfully. Returning to Login Page.")
+    st.switch_page("Login.py")
+
+st.sidebar.markdown(
+    f"<div style='font-weight: bold; font-size: 1.1em; ;margin-bottom: 10px;'>Welcome, {st.session_state.username}!</div>",
+    unsafe_allow_html=True
+)
+
+st.sidebar.button("Logout", on_click=logout, key="sidebar_logout_btn")
+
 st.title("User Guide")
 
 st.markdown("""
