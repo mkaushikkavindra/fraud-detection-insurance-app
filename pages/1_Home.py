@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 
 def logout():
     st.session_state.logged_in = False
