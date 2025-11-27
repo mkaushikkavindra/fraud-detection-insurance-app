@@ -10,8 +10,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 def logout():
     st.session_state.logged_in = False
     st.session_state.username = None
-    st.info("Logged out successfully. Returning to Home.")
-    st.rerun()
+    st.info("Logged out successfully. Returning to Login Page.")
+    st.switch_page("app.py")
+    
     
 if 'logged_in' not in st.session_state or not st.session_state.logged_in:
     st.error("You must be logged in to access the Car Insurance Fraud Detection App. Please return to the Home page to log in.")
@@ -430,6 +431,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
