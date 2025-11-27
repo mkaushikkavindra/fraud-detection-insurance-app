@@ -12,6 +12,9 @@ def logout():
     st.info("Logged out successfully. Returning to Login Page.")
     st.switch_page("Login.py")
 
+if 'logged_in' not in st.session_state or not st.session_state.logged_in:
+    st.switch_page("Login.py")
+
 st.sidebar.markdown(
     f"<div style='font-weight: bold; font-size: 1.1em; ;margin-bottom: 10px;'>Welcome, {st.session_state.username}!</div>",
     unsafe_allow_html=True
