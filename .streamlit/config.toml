@@ -1,0 +1,22 @@
+[general]
+disableWidgetRenderWithNgIf = true
+[ui]
+hideToolbar = true
+
+[global]
+menuItems = {}
+[general]
+disableWidgetRenderWithNgIf = true
+
+[ui]
+hideToolbar = true
+
+[global]
+menuItems = {} 
+
+[theme]
+primaryColor="#FF4B4B"
+backgroundColor="#F0F2F6"
+secondaryBackgroundColor="#0B2E53"
+textColor="#333333"
+font="sans serif"
