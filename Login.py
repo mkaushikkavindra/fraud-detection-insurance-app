@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 st.set_page_config(
-    page_title="Secure Fraud App Login",
+    page_title="Login",
     layout="centered",
     initial_sidebar_state="collapsed",
     menu_items={
@@ -21,7 +21,7 @@ if "username" not in st.session_state:
 def login_form():
     CREDENTIALS = {"user1": "pass123", "admin": "securepwd"}
 
-    st.title("Car Insurance Fraud Detection Tool")
+    st.title("Fraud Risk Score Calculator for Car Insurance")
     st.markdown("Please sign in to access the platform")
 
     with st.form("login_form", clear_on_submit=True):
@@ -38,8 +38,7 @@ def login_form():
                 st.success(f"Welcome, {username}! Redirecting...")
                 time.sleep(0.3)
 
-                # 🚀 AUTO-REDIRECT to Fraud Risk Score Calculator.py
-                st.switch_page("pages/Fraud Risk Score Calculator.py")
+                st.switch_page("pages/Home.py")
 
             else:
                 st.error("Invalid Username or Password, Try Again!")
@@ -50,4 +49,4 @@ if not st.session_state.logged_in:
     login_form()
 else:
     # If someone directly hits app.py after login
-    st.switch_page("pages/Home.py")
+    st.switch_page("pages/Fraud Risk Score Calculator.py")
