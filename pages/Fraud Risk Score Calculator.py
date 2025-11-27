@@ -24,7 +24,7 @@ st.set_page_config(page_title="Fraud Risk Score Calculator",layout="wide",initia
 col_title, col_logout = st.columns([10, 1])
 
 with col_title:
-    st.title("Car Insurance Fraud Detection")
+    st.title("Fraud Risk Score Calculator for Car Insurance")
     
 with col_logout:
     st.markdown(f"**Welcome, {st.session_state.username}!**", unsafe_allow_html=True)
@@ -430,6 +430,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
