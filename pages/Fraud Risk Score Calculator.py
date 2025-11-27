@@ -25,7 +25,7 @@ st.set_page_config(page_title="Fraud Risk Score Calculator",layout="wide",initia
         'About': None,
     })
 
-col_space, col_right_panel = st.columns([9, 3]) 
+col_space, col_right_panel = st.columns([6,4]) 
 
 with col_right_panel:
     st.markdown(
@@ -439,6 +439,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
