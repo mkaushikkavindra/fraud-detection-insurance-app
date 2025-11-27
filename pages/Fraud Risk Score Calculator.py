@@ -166,7 +166,7 @@ def process_claims_batch(df_claims: pd.DataFrame, scoring_func: callable) -> pd.
 # --- APPLICATION INPUT SELECTION (Modified) ---
 input_mode = st.radio(
     "Choose Input Method",
-    ('Batch File Upload','Single Claim Entry','Analyze Proof Images'),
+    ('Batch File Upload','Single Claim Entry'),#'Analyze Proof Images' coming soon!
     horizontal=True,
     help="Select Batch Upload for analyzing multiple claims from a CSV file or Single Entry for manual data or Analyze the proof images."
 )
@@ -426,12 +426,13 @@ if input_mode == 'Batch File Upload':
 elif input_mode == 'Single Claim Entry':
     single_claim_entry()
 
-elif input_mode == 'Analyze Proof Images':
+commented="""elif input_mode == 'Analyze Proof Images':
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
-    st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+    st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
