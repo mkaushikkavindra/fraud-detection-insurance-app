@@ -26,8 +26,7 @@ col_title, col_logout = st.columns([12, 1])
 with col_title:
     st.title("Car Insurance Fraud Detection")
 with col_logout:
-    st.markdown(f"**{st.session_state.username}**", unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(f"**Welcome, {st.session_state.username}!**", unsafe_allow_html=True)
     st.button("Logout", on_click=logout, key="main_logout_btn")
 
 # --- DEFINITIVE LIST OF REQUIRED USER INPUT COLUMNS (Including ID/text for context) ---
@@ -427,6 +426,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
