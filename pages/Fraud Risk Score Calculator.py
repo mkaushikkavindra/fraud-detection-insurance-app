@@ -25,14 +25,14 @@ st.set_page_config(page_title="Fraud Risk Score Calculator",layout="wide",initia
         'About': None,
     })
 
-col_space, col_right_panel = st.columns([10, 2]) 
+col_space, col_right_panel = st.columns([9, 3]) 
 
 with col_right_panel:
     st.markdown(
         f"<div style='text-align: right; font-weight: bold; font-size: 1.2em; margin-bottom: 5px;'>Welcome, {st.session_state.username}!</div>",
         unsafe_allow_html=True
     )
-    col_button_space, col_button = st.columns([6,4]) 
+    col_button_space, col_button = st.columns([5,5]) 
     with col_button:
         st.button("Logout", on_click=logout, key="main_logout_btn")
 
@@ -439,6 +439,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
