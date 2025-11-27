@@ -27,7 +27,6 @@ st.markdown("""
 * **Real-time Scoring:** Get an instant **Fraud Risk Score** (0-100%) for any claim data input.
 * **Text Analysis:** Identify suspicious language patterns in claim descriptions using integrated NLP features.
 * **Data-Driven Decisions:** Receive a clear decision: **Approve Automatically** or **Manual Review Required** or **Flagged as Potential Fraud**.
-* **Comprehensive Analytics:** Access detailed dashboards to monitor fraud trends across regions and incident types (available after login).
 """)
 
 st.markdown("---")
