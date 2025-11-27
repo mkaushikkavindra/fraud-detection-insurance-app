@@ -29,10 +29,9 @@ col_space, col_right_panel = st.columns([10, 2])
 
 with col_right_panel:
     st.markdown(
-        f"<font-weight=bold;div style='text-align: right;'>Welcome, {st.session_state.username}!</div>", 
+        f"<div style='text-align: right; font-weight: bold; font-size: 1.2em;'>Welcome, {st.session_state.username}!</div>",
         unsafe_allow_html=True
     )
-    
     st.button("Logout", on_click=logout, key="main_logout_btn")
 
 
@@ -442,6 +441,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
