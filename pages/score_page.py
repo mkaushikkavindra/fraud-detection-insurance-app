@@ -7,6 +7,96 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+def inject_custom_css():
+    st.markdown("""
+        <style>
+            /* 1. Main Background */
+            .stApp {
+                background-color: #f0f2f6; /* Light gray background */
+            }
+
+            /* 2. Primary Header Text */
+            h1 {
+                color: #0b2e53; /* Dark Navy for titles */
+                border-bottom: 2px solid #ff4b4b; /* Red accent underline */
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            /* 3. Subheaders */
+            h2, h3 {
+                color: #0b2e53;
+            }
+
+            /* 4. Sidebar Styles (score_page.py only) */
+            .st-emotion-cache-1lc5d3g, .st-emotion-cache-1lc5d3g .st-emotion-cache-zt5ig8 {
+                background-color: #0b2e53; /* Dark Navy background */
+            }
+            .st-emotion-cache-1lc5d3g .st-emotion-cache-10trblm {
+                color: white; /* White text for sidebar header */
+            }
+            .st-emotion-cache-1lc5d3g .stButton > button {
+                background-color: #ff4b4b; /* Red button for Logout */
+                color: white;
+                border-radius: 5px;
+                border: none;
+            }
+            .st-emotion-cache-1lc5d3g .stButton > button:hover {
+                background-color: #e63946;
+            }
+
+            /* 5. Form/Input Styling (Make them boxy/professional) */
+            .stTextInput > div > div > input,
+            .stDateInput > div > div > input,
+            .stTextArea > textarea,
+            .stSelectbox > div > div {
+                border-radius: 8px; /* Slightly rounded corners */
+                border: 1px solid #ccc; /* Lighter border */
+                box-shadow: 1px 1px 5px rgba(0,0,0,0.05); /* Subtle shadow */
+            }
+
+            /* 6. Metrics/Cards (score_page.py results) */
+            .st-emotion-cache-16idsys p {
+                font-size: 1.1em; /* Make metric labels slightly larger */
+                color: #4a4a4a;
+            }
+            [data-testid="stMetricValue"] {
+                font-size: 2.2rem;
+                color: #0b2e53; /* Dark value text */
+            }
+
+            /* 7. Success/Error Messages */
+            .stAlert.success {
+                background-color: #e6ffe6;
+                color: #008000;
+                border-left: 5px solid #008000;
+            }
+            .stAlert.error {
+                background-color: #ffe6e6;
+                color: #ff0000;
+                border-left: 5px solid #ff0000;
+            }
+
+            /* 8. Radio Buttons/Tabs */
+            [data-testid="stRadio"] label {
+                background-color: #e0e0e0;
+                padding: 8px 15px;
+                border-radius: 5px;
+                margin: 2px;
+                font-weight: bold;
+                transition: background-color 0.2s;
+            }
+            [data-testid="stRadio"] label:has(input:checked) {
+                background-color: #ff4b4b; /* Red selected background */
+                color: white;
+            }
+
+
+        </style>
+    """, unsafe_allow_html=True)
+
+inject_custom_css()
+
 def logout():
     st.session_state.logged_in = False
     st.session_state.username = None
@@ -423,6 +513,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
