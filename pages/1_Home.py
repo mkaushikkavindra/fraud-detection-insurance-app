@@ -6,6 +6,9 @@ def logout():
     st.info("Logged out successfully. Returning to Login Page.")
     st.switch_page("Login.py")
 
+if 'logged_in' not in st.session_state or not st.session_state.logged_in:
+    st.switch_page("Login.py")
+
 st.set_page_config(
     page_title="Home",
     layout="centered",
