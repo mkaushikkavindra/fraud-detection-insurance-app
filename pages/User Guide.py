@@ -10,7 +10,7 @@ st.set_page_config(
 st.title("User Guide")
 
 st.markdown("""
-This guide provides step-by-step instructions for utilizing the **Fraud Risk Score Calculator** to submit claims and interpret the results.
+This guide provides step-by-step instructions for utilizing the **Fraud Risk Score Calculator for Car Insurance** to submit claims and interpret the results.
 """)
 
 st.markdown("---")
