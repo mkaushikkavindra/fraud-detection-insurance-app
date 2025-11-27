@@ -40,11 +40,4 @@ Please **Sign In** using the official login page available in the navigation men
 
 # Note: The sidebar is collapsed on initial load. We instruct the user to expand it.
 
-st.markdown(
-    f"""
-    <div style='background-color: #ff4b4b; padding: 15px; border-radius: 8px; color: white; text-align: center; font-size: 1.2em; font-weight: bold;'>
-        ➡️ Click the hamburger menu (☰) in the top-left corner, and select the 'login page' to continue.
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
+st.info("Click the hamburger menu (☰) in the top-left corner, and select the 'login page' to continue.")
