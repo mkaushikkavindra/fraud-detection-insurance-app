@@ -25,26 +25,22 @@ st.set_page_config(page_title="Fraud Risk Score Calculator",layout="wide",initia
         'About': None,
     })
 
-col_space, col_right_panel = st.columns([10, 2])
+col_space, col_right_panel = st.columns([10, 2]) 
 
 with col_right_panel:
     st.markdown(
-        f"<div style='text-align: right; font-weight: bold; font-size: 1.2em;'>Welcome, {st.session_state.username}!</div>",
+        f"<div style='text-align: right; font-weight: bold; font-size: 1.2em; margin-bottom: 5px;'>Welcome, {st.session_state.username}!</div>",
         unsafe_allow_html=True
     )
-    st.markdown("<div style='text-align: right;'>", unsafe_allow_html=True)
-    st.button("Logout", on_click=logout, key="main_logout_btn")
-    st.markdown("</div>", unsafe_allow_html=True)
-
+    col_button_space, col_button = st.columns([1, 10]) 
+    with col_button:
+        st.button("Logout", on_click=logout, key="main_logout_btn")
 
 st.markdown("---")
 
 st.title("Fraud Risk Score Calculator for Car Insurance")
 
-st.markdown("<br>")
-st.markdown("<br>")
-
-
+st.markdown("<br><br>",unsafe_allow_html=True)
 
 # --- DEFINITIVE LIST OF REQUIRED USER INPUT COLUMNS (Including ID/text for context) ---
 REQUIRED_INPUT_COLUMNS = [
@@ -443,6 +439,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
