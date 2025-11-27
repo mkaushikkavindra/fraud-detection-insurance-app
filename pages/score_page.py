@@ -15,8 +15,7 @@ def logout():
     
     
 if 'logged_in' not in st.session_state or not st.session_state.logged_in:
-    st.error("You must be logged in to access the Car Insurance Fraud Detection App. Please return to the Home page to log in.")
-    st.stop()
+    st.switch_page("app.py")
 
 from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC,fraudriskscore_final,fraudriskscore_ensemble
 
@@ -431,6 +430,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
