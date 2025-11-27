@@ -40,7 +40,7 @@ st.markdown("---")
 
 st.title("Fraud Risk Score Calculator for Car Insurance")
 
-st.markdown("<br><br>",unsafe_allow_html=True)
+st.markdown("<br>",unsafe_allow_html=True)
 
 # --- DEFINITIVE LIST OF REQUIRED USER INPUT COLUMNS (Including ID/text for context) ---
 REQUIRED_INPUT_COLUMNS = [
@@ -439,6 +439,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
