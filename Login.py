@@ -4,7 +4,12 @@ import time
 st.set_page_config(
     page_title="Secure Fraud App Login",
     layout="centered",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
+    menu_items={
+        'Get Help': None,   
+        'Report a Bug': None,  
+        'About': None,   
+    }
 )
 
 if "logged_in" not in st.session_state:
