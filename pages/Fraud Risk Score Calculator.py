@@ -11,11 +11,11 @@ def logout():
     st.session_state.logged_in = False
     st.session_state.username = None
     st.info("Logged out successfully. Returning to Login Page.")
-    st.switch_page("Home.py")
+    st.switch_page("Login.py")
     
     
 if 'logged_in' not in st.session_state or not st.session_state.logged_in:
-    st.switch_page("Home.py")
+    st.switch_page("Login.py")
 
 from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC,fraudriskscore_final,fraudriskscore_ensemble
 
@@ -430,6 +430,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
