@@ -33,7 +33,7 @@ The application offers two primary methods for submitting claim details for frau
 <li>Review the available input methods at the top of the calculator page:
     <ul>
         <li><b>Batch File Upload:</b> For processing one or more (multiple) claims contained in a single CSV file.</li>
-        <li></b>Single Claim Entry:</b> For processing the details of only one claim at a time via a detailed web form.</li>
+        <li><b>Single Claim Entry:</b> For processing the details of only one claim at a time via a detailed web form.</li>
     </ul>
 </li>
 <li>Select the input mode you wish to use.</li>
@@ -45,17 +45,17 @@ st.markdown("---")
 
 st.markdown("""
 <ol start="6">
-<li>For **Batch File Upload**, locate the upload box and select the CSV file you want to analyze.</li>
+<li>For <b>Batch File Upload,</b>, locate the upload box and select the CSV file you want to analyze.</li>
 <li>The model will process all claims and display the results table.</li>
-<li>The final results will include **four new columns** added to your original data:
+<li>The final results will include <b>four new columns</b> added to your original data:
     <ul>
-        <li>**"Fraud Risk Score (%)"**: The overall probability of fraud (0-100%).</li>
-        <li>**"Risk Level"**: Categorical risk assessment (e.g., High, Medium, Low).</li>
-        <li>**"Decision"**: Recommended action (**Investigate** or **Approve**).</li>
-        <li>**"Text Suspicion Score (%)"**: The score generated from the claim description text analysis.</li>
+        <li><b>"Fraud Risk Score (%)"</b>: The overall probability of fraud (0-100%).</li>
+        <li><b>"Risk Level"</b>: Categorical risk assessment (e.g., High, Medium, Low).</li>
+        <li><b>"Decision"</b>: Recommended action (**Investigate** or **Approve**).</li>
+        <li><b>"Text Suspicion Score (%)"</b>: The score generated from the claim description text analysis.</li>
     </ul>
 </li>
-<li>Click on **"Download The Results as CSV"** to save the complete analyzed file to your system.</li>
+<li>Click on <b>"Download The Results as CSV"</b> to save the complete analyzed file to your system.</li>
 </ol>
 """, unsafe_allow_html=True)
 
@@ -64,9 +64,9 @@ st.markdown("---")
 
 st.markdown("""
 <ol start="10">
-<li>For **Single Claim Entry**, carefully enter all required details into the form provided.</li>
-<li>Click on **"Analyze Claim for Fraud"**.</li>
-<li>The final results—**Decision, Fraud Risk Score, Risk Level, and Text Suspicion Score**—will be prominently displayed below the form.</li>
+<li>For <b>Single Claim Entry</b>, carefully enter all required details into the form provided.</li>
+<li>Click on <b>"Analyze Claim for Fraud"</b>.</li>
+<li>The final results—<b>Decision, Fraud Risk Score, Risk Level, and Text Suspicion Score</b>—will be prominently displayed below the form.</li>
 </ol>
 """, unsafe_allow_html=True)
 
@@ -74,7 +74,7 @@ st.markdown("---")
 
 st.markdown("""
 <ol start="13">
-<li>For logging out, click the **"Logout"** button located at the **top of the sidebar**, just below your welcome message.</li>
-<li>**For enhanced safety,** you will be automatically logged out and redirected to the login page once you close the browser tab or navigate away from the application.</li>
+<li>For logging out, click the <b>"Logout"</b> button located at the <b>top of the sidebar</b>, just below your welcome message.</li>
+<li><b>For enhanced safety</b>, you will be automatically logged out and redirected to the login page once you close the browser tab or navigate away from the application.</li>
 </ol>
 """)
