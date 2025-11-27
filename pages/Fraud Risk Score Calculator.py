@@ -29,7 +29,7 @@ col_space, col_right_panel = st.columns([10, 2])
 
 with col_right_panel:
     st.markdown(
-        f"<div style='text-align: right;'>**Welcome, {st.session_state.username}!**</div>", 
+        f"<font-weight=bold;div style='text-align: right;'>Welcome, {st.session_state.username}!</div>", 
         unsafe_allow_html=True
     )
     
@@ -442,6 +442,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
