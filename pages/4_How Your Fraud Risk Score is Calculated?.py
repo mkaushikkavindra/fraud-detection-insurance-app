@@ -13,6 +13,8 @@ def logout():
     st.switch_page("Login.py")
 
 if 'logged_in' not in st.session_state or not st.session_state.logged_in:
+    st.warning("Login to access the platform!!")
+    time.sleep(2.5)
     st.switch_page("Login.py")
 
 st.sidebar.markdown(
