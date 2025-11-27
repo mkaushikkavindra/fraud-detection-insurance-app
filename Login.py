@@ -33,11 +33,11 @@ def login_form():
                 st.success(f"Welcome, {username}! Redirecting...")
                 time.sleep(0.3)
 
-                # 🚀 AUTO-REDIRECT to score_page.py
-                st.switch_page("pages/score_page.py")
+                # 🚀 AUTO-REDIRECT to Fraud Risk Score Calculator.py
+                st.switch_page("pages/Fraud Risk Score Calculator.py")
 
             else:
-                st.error("❌ Invalid Username or Password")
+                st.error("Invalid Username or Password, Try Again!")
 
 
 # ---------- MAIN ----------
@@ -45,4 +45,4 @@ if not st.session_state.logged_in:
     login_form()
 else:
     # If someone directly hits app.py after login
-    st.switch_page("pages/score_page.py")
+    st.switch_page("pages/Fraud Risk Score Calculator.py")
