@@ -19,15 +19,8 @@ if 'logged_in' not in st.session_state or not st.session_state.logged_in:
 
 from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudriskscore_GBC,fraudriskscore_final,fraudriskscore_ensemble
 
-st.set_page_config(page_title="Fraud Risk Score Calculator",layout="wide",initial_sidebar_state="expanded", menu_items={
-        'Get Help': None,
-        'Report a Bug': None,
-        'About': None,
-    })
+st.set_page_config(page_title="Fraud Risk Score Calculator",layout="centered",initial_sidebar_state="expanded")
 
-
-
-st.markdown("---")
 
 st.sidebar.markdown(
     f"<div style='font-weight: bold; font-size: 1.1em; ;margin-bottom: 10px;'>Welcome, {st.session_state.username}!</div>",
@@ -439,6 +432,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
