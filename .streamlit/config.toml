@@ -10,6 +10,6 @@ menuItems = {}
 [theme]
 primaryColor="#FF4B4B"
 backgroundColor="#D4D0CF"
-secondaryBackgroundColor="#0B2E53"
+secondaryBackgroundColor="#B8B8BA"
 textColor="#333333"
 font="sans serif"
