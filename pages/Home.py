@@ -6,7 +6,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed" 
 )
 
-st.markdown("#Car Insurance Fraud Detection Tool")
+st.title("Car Insurance Fraud Detection Tool")
 st.markdown("---")
 
 st.markdown("""
