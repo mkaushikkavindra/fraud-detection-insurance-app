@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 st.sidebar.markdown(
-    f"<div style='font-weight: bold; font-size: 1.1em; ;margin-bottom: 10px;'>Welcome, {st.session_state.username}!</div>",
+    f"<div style='font-weight: bold; font-size: 1.1em; margin-bottom: 10px;'>Welcome, {st.session_state.username}!</div>",
     unsafe_allow_html=True
 )
 
