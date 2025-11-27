@@ -6,7 +6,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed" 
 )
 
-st.title("Car Insurance Fraud Detection Tool")
+st.title("Fraud Risk Score Calculator for Car Insurance")
 st.markdown("---")
 
 st.markdown("""
