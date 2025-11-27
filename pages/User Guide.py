@@ -18,9 +18,9 @@ st.markdown("---")
 
 st.markdown("""
 <ol>
-<li>Navigate to the **Login Page** from the sidebar navigation menu.</li>
-<li>Enter your registered credentials and click **"Log In."**</li>
-<li>Upon successful login, the **"Fraud Risk Score Calculator for Car Insurance"** will open automatically.</li>
+<li>Navigate to the <b>Login Page</b> from the sidebar navigation menu.</li>
+<li>Enter your registered credentials and click <b>"Log In."</b></li>
+<li>Upon successful login, the <b>"Fraud Risk Score Calculator for Car Insurance"</b> will open automatically.</li>
 </ol>
 """, unsafe_allow_html=True)
 
@@ -32,8 +32,8 @@ The application offers two primary methods for submitting claim details for frau
 <ol start="4">
 <li>Review the available input methods at the top of the calculator page:
     <ul>
-        <li>**Batch File Upload:** For processing one or more (multiple) claims contained in a single CSV file.</li>
-        <li>**Single Claim Entry:** For processing the details of only one claim at a time via a detailed web form.</li>
+        <li><b>Batch File Upload:</b> For processing one or more (multiple) claims contained in a single CSV file.</li>
+        <li></b>Single Claim Entry:</b> For processing the details of only one claim at a time via a detailed web form.</li>
     </ul>
 </li>
 <li>Select the input mode you wish to use.</li>
