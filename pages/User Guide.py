@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 st.set_page_config(
-    page_title="User Guide & Protocol",
+    page_title="User Guide",
     layout="centered",
     initial_sidebar_state="expanded"
 )
