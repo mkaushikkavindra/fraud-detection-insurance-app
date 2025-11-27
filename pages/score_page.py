@@ -21,8 +21,7 @@ from fraudriskscore_final import fraudriskscore_RFC, fraudriskscore_LR, fraudris
 
 st.set_page_config(page_title="Fraud Risk Score Calculator",layout="wide",initial_sidebar_state="expanded")
 
-st.sidebar.header(f"User: {st.session_state.username}")
-col_title, col_logout = st.columns([12, 1])
+col_title, col_logout = st.columns([10, 1])
 with col_title:
     st.title("Car Insurance Fraud Detection")
 with col_logout:
@@ -426,6 +425,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
