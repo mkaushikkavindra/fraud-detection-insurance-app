@@ -1,12 +1,5 @@
 [general]
 disableWidgetRenderWithNgIf = true
-[ui]
-hideToolbar = true
-
-[global]
-menuItems = {}
-[general]
-disableWidgetRenderWithNgIf = true
 
 [ui]
 hideToolbar = true
