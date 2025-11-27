@@ -1,9 +1,20 @@
 import streamlit as st
 
+def logout():
+    st.session_state.logged_in = False
+    st.session_state.username = None
+    st.info("Logged out successfully. Returning to Login Page.")
+    st.switch_page("Login.py")
+
 st.set_page_config(
     page_title="Home",
     layout="centered",
     initial_sidebar_state="collapsed" 
+)
+
+st.sidebar.markdown(
+    f"<div style='font-weight: bold; font-size: 1.1em; ;margin-bottom: 10px;'>Welcome, {st.session_state.username}!</div>",
+    unsafe_allow_html=True
 )
 
 st.title("Fraud Risk Score Calculator for Car Insurance")
