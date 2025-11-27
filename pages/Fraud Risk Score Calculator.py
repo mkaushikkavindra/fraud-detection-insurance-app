@@ -38,6 +38,15 @@ with col_right_panel:
 
 st.markdown("---")
 
+st.sidebar.markdown(
+    f"<div style='font-weight: bold; font-size: 1.1em; color: white; margin-bottom: 10px;'>👤 Welcome, {st.session_state.username}!</div>",
+    unsafe_allow_html=True
+)
+
+st.sidebar.button("Logout", on_click=logout, key="sidebar_logout_btn")
+
+st.sidebar.markdown("---")
+
 st.title("Fraud Risk Score Calculator for Car Insurance")
 
 st.markdown("<br>",unsafe_allow_html=True)
@@ -439,6 +448,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
