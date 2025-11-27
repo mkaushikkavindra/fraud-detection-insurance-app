@@ -17,6 +17,8 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
+st.sidebar.button("Logout", on_click=logout, key="sidebar_logout_btn")
+
 st.title("Fraud Risk Score Calculator for Car Insurance")
 st.markdown("---")
 
