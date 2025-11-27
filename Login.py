@@ -16,8 +16,8 @@ if "username" not in st.session_state:
 def login_form():
     CREDENTIALS = {"user1": "pass123", "admin": "securepwd"}
 
-    st.title("🔑 Car Insurance Fraud Detection Login")
-    st.markdown("Please sign in to access the secure analysis tool.")
+    st.title("LOGIN")
+    st.markdown("Please sign in to access the platform")
 
     with st.form("login_form", clear_on_submit=True):
         username = st.text_input("Username").strip()
