@@ -7,25 +7,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-commented="""def inject_custom_css():
-    st.markdown("""
-        <style>
-            /* Add your custom styling definitions here */
-            .stApp { background-color: #f0f2f6; }
-            h1 { color: #0b2e53; border-bottom: 2px solid #ff4b4b; padding-bottom: 10px; margin-bottom: 20px; }
-            h2, h3 { color: #0b2e53; }
-            
-            /* Style the list item text for better readability */
-            .stMarkdown > div > ol > li {
-                font-size: 1.05em;
-                line-height: 1.6;
-                margin-bottom: 10px;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-inject_custom_css()"""
-
-
 st.title("User Guide")
 
 st.markdown("""
