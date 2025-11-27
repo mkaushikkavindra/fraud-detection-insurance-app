@@ -64,9 +64,9 @@ st.markdown("---")
 st.markdown("""
 <ol start="6">
 <li>For <b>Batch File Upload,</b> locate the upload box and select the CSV file you want to analyze.<br>
-CSV Requirements: The uploaded CSV file must contain all 39 required input columns with headers exactly matching the following names (case-sensitive):
-months_as_customer, age, policy_number, policy_bind_date, policy_state, policy_csl, policy_deductable, policy_annual_premium, umbrella_limit, insured_zip, insured_sex, insured_education_level, insured_occupation, insured_hobbies, insured_relationship, capital-gains, capital-loss, incident_date, incident_type, collision_type, incident_severity, authorities_contacted, incident_state, incident_city, incident_location, incident_hour_of_the_day, number_of_vehicles_involved, property_damage, bodily_injuries, witnesses, police_report_available, total_claim_amount, injury_claim, property_claim, vehicle_claim, auto_make, auto_model, auto_year, claim_description
-</li>
+<b>Note the CSV Requirements<b>: The uploaded CSV file must contain all 39 required input columns with headers exactly matching the following names (case-sensitive):<br><br>
+<i>months_as_customer, age, policy_number, policy_bind_date, policy_state, policy_csl, policy_deductable, policy_annual_premium, umbrella_limit, insured_zip, insured_sex, insured_education_level, insured_occupation, insured_hobbies, insured_relationship, capital-gains, capital-loss, incident_date, incident_type, collision_type, incident_severity, authorities_contacted, incident_state, incident_city, incident_location, incident_hour_of_the_day, number_of_vehicles_involved, property_damage, bodily_injuries, witnesses, police_report_available, total_claim_amount, injury_claim, property_claim, vehicle_claim, auto_make, auto_model, auto_year, claim_description
+</i></li><br><br>
 <li>The model will process all claims and display the results table.</li>
 <li>The final results will include <b>four new columns</b> added to your original data:
     <ul>
