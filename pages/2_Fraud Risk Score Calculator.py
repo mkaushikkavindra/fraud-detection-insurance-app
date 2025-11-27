@@ -377,7 +377,7 @@ def single_claim_entry():
                 st.exception(e)
 
 def batch_file_upload():
-    #commented="""
+    commented="""
     st.subheader("Upload Claim Data (CSV)")
     
     with st.expander("📝 Required CSV Columns"):
@@ -435,6 +435,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
