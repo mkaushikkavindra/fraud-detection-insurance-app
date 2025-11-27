@@ -13,7 +13,7 @@ st.markdown("""
 ### Welcome to the Platform!
 """)
 
-st.info("This advanced platform is designed to provide immediate, data-driven risk assessment for car insurance claims.")
+st.markdown("This advanced platform is designed to provide immediate, data-driven risk assessment for car insurance claims.")
 
 st.markdown("""
 Our system leverages a robust **Ensemble Machine Learning Model** combined with **Natural Language Processing (NLP)** of claim descriptions to achieve industry-leading accuracy in identifying fraudulent activities.
