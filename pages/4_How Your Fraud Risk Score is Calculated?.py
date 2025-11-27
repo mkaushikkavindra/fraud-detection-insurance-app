@@ -50,6 +50,23 @@ It provides the most robust and consistent risk assessment.</li>
 </ul>
 </li>
 
+<li><b>The Safety Net: Random Forest Classifier (RFC)</b>
+<ul> 
+<li>Role: Maximized Fraud Detection (High Recall). The RFC acts as a safety net for complex or novel fraud.</li>
+<li>Performance: It is specifically configured to be the most sensitive model. 
+It's essential for catching unusual or sophisticated fraud that the primary GBC might overlook, ensuring the system pushes the boundary to prevent False Negatives (missed fraud cases).</li>
+</ul>
+</li>
+
+<li><b>The Audit Baseline: Logistic Regression (LR)</b>
+<ul> 
+<li>Role: Conservative Validation and System Justification.</li>
+<li>Performance: Serving as the simplest, most conservative model, the LR provides a vital baseline. 
+Its scores demonstrate that simple, linear relationships alone are inadequate for modern fraud detection, 
+thus justifying the complexity and superior performance of the Ensemble system.</li>
+</ul>
+</li>
+
 </ol>
 """, unsafe_allow_html=True)
 
