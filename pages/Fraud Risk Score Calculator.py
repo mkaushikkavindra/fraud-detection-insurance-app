@@ -25,15 +25,23 @@ st.set_page_config(page_title="Fraud Risk Score Calculator",layout="wide",initia
         'About': None,
     })
 
-col_title, col_logout = st.columns([10, 1])
+col_space, col_right_panel = st.columns([10, 2])
 
-with col_title:
-    st.title("Fraud Risk Score Calculator for Car Insurance")
+with col_right_panel:
+    st.markdown(
+        f"<div style='text-align: right;'>**Welcome, {st.session_state.username}!**</div>", 
+        unsafe_allow_html=True
+    )
     
-with col_logout:
-    st.markdown(f"**Welcome, {st.session_state.username}!**", unsafe_allow_html=True)
     st.button("Logout", on_click=logout, key="main_logout_btn")
 
+
+st.markdown("---")
+
+st.title("Fraud Risk Score Calculator for Car Insurance")
+
+st.markdown("<br>")
+st.markdown("<br>")
 
 
 
@@ -434,6 +442,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
