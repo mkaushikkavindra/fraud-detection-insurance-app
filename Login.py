@@ -50,5 +50,5 @@ if not st.session_state.logged_in:
 else:
     # If someone directly hits app.py after login
     st.warning("You are already logged in!")
-    time.sleep(1.5)
+    time.sleep(2.5)
     st.switch_page("pages/2_Fraud Risk Score Calculator.py")
