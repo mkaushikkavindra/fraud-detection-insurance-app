@@ -5,3 +5,5 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed" 
 )
+
+st.title("How Your Fraud Risk Score is Calculated?")
