@@ -49,4 +49,5 @@ if not st.session_state.logged_in:
     login_form()
 else:
     # If someone directly hits app.py after login
-    st.switch_page("pages/Fraud Risk Score Calculator.py")
+    st.switch_page("pages/2_Fraud Risk Score Calculator.py")
+    st.warning("You are already logged in!")
