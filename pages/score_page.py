@@ -27,7 +27,7 @@ with col_logout:
     st.markdown(f"**Welcome, {st.session_state.username}!**", unsafe_allow_html=True)
     st.button("Logout", on_click=logout, key="main_logout_btn")
 
-st.markdown("<br><br>")
+st.markdown("<br><br>", unsafe_allow_html=True))
 
 with col_title:
     st.title("Car Insurance Fraud Detection")
@@ -429,6 +429,7 @@ elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
+
 
 
 
