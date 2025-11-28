@@ -175,6 +175,9 @@ input_mode = st.radio(
 )
 #st.markdown("---")
 
+def reset_form_fields():
+    st.rerun()
+    
 def single_claim_entry():
     st.subheader("Enter Single Claim Details")
     # --- The original form block starts here ---
@@ -441,6 +444,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
