@@ -312,7 +312,6 @@ def single_claim_entry():
 
         submitted = st.form_submit_button("Analyze Claim for Fraud")
 
-    st.button("Reset", on_click=reset_form_fields, type="secondary", help="Clear all fields and reset the form.")
 
     # POST-SUBMISSION LOGIC (Single Claim - UNCHANGED)
     if submitted:
@@ -440,6 +439,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
