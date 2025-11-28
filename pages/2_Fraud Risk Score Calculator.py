@@ -306,8 +306,14 @@ def single_claim_entry():
             auto_year = st.number_input("Auto Year", min_value=1950, max_value=datetime.date.today().year + 1, value=2019)
 
         claim_description = st.text_area("Claim Description *", "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain.")
+
+        col_submit, col_reset = st.columns([4, 1])
         
-        submitted = st.form_submit_button("Analyze Claim for Fraud")
+        with col_submit:
+            submitted = st.form_submit_button("Analyze Claim for Fraud")
+
+        with col_reset:
+            st.button("Reset", on_click=reset_form_fields, type="secondary", help="Clear all fields and reset the form.")
 
     # POST-SUBMISSION LOGIC (Single Claim - UNCHANGED)
     if submitted:
@@ -435,6 +441,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
