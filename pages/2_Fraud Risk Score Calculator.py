@@ -175,58 +175,38 @@ input_mode = st.radio(
 )
 #st.markdown("---")
 
+if 'logged_in' not in st.session_state or not st.session_state.logged_in:
+# ... (rest of login check)
+
+# Ensure the reset key is initialized globally
 if 'reset_key' not in st.session_state:
     st.session_state.reset_key = 0
 
-# 2. Define the callback function to reset the form
+# Define the callback function to reset the form
 def reset_form_fields_callback():
+    # Incrementing the key forces Streamlit to destroy and recreate all widgets, 
+    # resetting them to their initial 'value' (the defaults you specified).
     st.session_state.reset_key += 1
-    
+    # st.rerun() is not strictly needed here as the session state change triggers a rerun.
+# ------------------------------------------------------------------------
+
+# --- UPDATED single_claim_entry FUNCTION ---
 def single_claim_entry():
     st.subheader("Enter Single Claim Details")
     
-    # --- The original form block starts here ---
-    # Use the reset_key to force a re-render of all widgets inside the form
+    # 3. Use the dynamic key here to ensure re-initialization on reset
     with st.form(key=f"claim_values_{st.session_state.reset_key}"):
+        
         # --- Helper lists (UNCHANGED) ---
+        # ... (all helper lists: yes_no_options, state_options, etc.) ...
         yes_no_options = ["NO", "YES"]
         state_options = [
-    "Tamil Nadu",
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Delhi (National Capital Territory of Delhi)",
-    "Jammu and Kashmir",
-    "Ladakh",
-    "Lakshadweep",
-    "Puducherry"
+    "Tamil Nadu", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", 
+    "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
+    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", 
+    "Sikkim", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", 
+    "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", 
+    "Delhi (National Capital Territory of Delhi)", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
 ]
         csl_options = ["100/300", "250/500", "500/1000", "1000/2000"]
         sex_options = ["MALE", "FEMALE", "OTHER"]
@@ -239,6 +219,7 @@ def single_claim_entry():
         st.subheader("1. Policy & Insured Details")
         col1, col2, col3 = st.columns(3)
         with col1:
+            # These widgets will reset to their 'value' argument ("12345", datetime.date(2018, 7, 15), etc.)
             policy_number = st.text_input("Policy Number *", "12345")
             policy_state = st.selectbox("Policy State *", state_options)
             policy_csl = st.selectbox("Policy CSL *", csl_options)
@@ -323,13 +304,13 @@ def single_claim_entry():
             submitted = st.form_submit_button("▶️ **Analyze Claim for Fraud**")
             
         with col_reset:
-            # Add the Reset button using the callback function
+            # 4. Use the on_click callback to trigger the key change
             st.form_submit_button("🔄 Reset Form", on_click=reset_form_fields_callback)
 
 
     # POST-SUBMISSION LOGIC (Single Claim - UNCHANGED)
+    # ... (rest of the submission logic)
     if submitted:
-        #st.header("Analysis Results")
         
         with st.spinner(f"Running..."):
             try:          
@@ -383,7 +364,7 @@ def single_claim_entry():
                 col2.metric("Risk Level", result['risk_level'])
                 col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
                             help="The model's suspicion score based on the claim description text.")
-
+                
                 #with st.expander("Show Full JSON Response"):
                     #st.json(result)
                 
@@ -453,6 +434,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
