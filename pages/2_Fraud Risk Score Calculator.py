@@ -182,20 +182,21 @@ if 'reset_key' not in st.session_state:
 # Define the callback function to reset the form
 def reset_form_fields_callback():
     # Incrementing the key forces Streamlit to destroy and recreate all widgets, 
-    # resetting them to their initial 'value' (the defaults you specified).
+    # resetting them to their initial 'value' arguments.
     st.session_state.reset_key += 1
-    # st.rerun() is not strictly needed here as the session state change triggers a rerun.
 # ------------------------------------------------------------------------
 
 # --- UPDATED single_claim_entry FUNCTION ---
 def single_claim_entry():
     st.subheader("Enter Single Claim Details")
     
-    # 3. Use the dynamic key here to ensure re-initialization on reset
-    with st.form(key=f"claim_values_{st.session_state.reset_key}"):
+    # Get the current reset key value once to use across all widget keys
+    current_key = st.session_state.reset_key
+
+    # Use the dynamic key here to ensure re-initialization on reset
+    with st.form(key=f"claim_values_form_{current_key}"):
         
         # --- Helper lists (UNCHANGED) ---
-        # ... (all helper lists: yes_no_options, state_options, etc.) ...
         yes_no_options = ["NO", "YES"]
         state_options = [
     "Tamil Nadu", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", 
@@ -212,87 +213,86 @@ def single_claim_entry():
         authorities_options = ["Police", "Fire", "Ambulance", "Other", "None"]
         incident_type_options = ["Single Vehicle Collision", "Multi-vehicle Collision", "Parked Car", "Rear-End Collision", "Side Collision"]
         
-        # --- Form Layout (UNCHANGED) ---
+        # --- Form Layout (MODIFIED to include dynamic keys for ALL INPUTS) ---
         st.subheader("1. Policy & Insured Details")
         col1, col2, col3 = st.columns(3)
         with col1:
-            # These widgets will reset to their 'value' argument ("12345", datetime.date(2018, 7, 15), etc.)
-            policy_number = st.text_input("Policy Number *", "12345")
-            policy_state = st.selectbox("Policy State *", state_options)
-            policy_csl = st.selectbox("Policy CSL *", csl_options)
-            policy_bind_date = st.date_input("Policy Bind Date *", datetime.date(2018, 7, 15))
+            policy_number = st.text_input("Policy Number *", "12345", key=f"pn_{current_key}")
+            policy_state = st.selectbox("Policy State *", state_options, key=f"ps_{current_key}")
+            policy_csl = st.selectbox("Policy CSL *", csl_options, key=f"pcs_{current_key}")
+            policy_bind_date = st.date_input("Policy Bind Date *", datetime.date(2018, 7, 15), key=f"pbd_{current_key}")
         
         with col2:
-            months_as_customer = st.number_input("Months as Customer *", min_value=0, value=48)
-            age = st.number_input("Insured Age *", min_value=16, max_value=100, value=35)
-            insured_sex = st.selectbox("Insured Sex *", sex_options)
-            insured_education_level = st.selectbox("Insured Education *", education_options, index=1)
+            months_as_customer = st.number_input("Months as Customer *", min_value=0, value=48, key=f"mac_{current_key}")
+            age = st.number_input("Insured Age *", min_value=16, max_value=100, value=35, key=f"age_{current_key}")
+            insured_sex = st.selectbox("Insured Sex *", sex_options, key=f"isex_{current_key}")
+            insured_education_level = st.selectbox("Insured Education *", education_options, index=1, key=f"iedu_{current_key}")
 
         with col3:
-            policy_deductable = st.number_input("Policy Deductible *", min_value=0, step=100, value=1000)
-            policy_annual_premium = st.number_input("Annual Premium *", min_value=0.0, format="%.2f", value=1200.0)
-            umbrella_limit = st.number_input("Umbrella Limit", min_value=0, step=100000, value=0)
-            insured_zip = st.text_input("Insured Zip Code *", "90001")
+            policy_deductable = st.number_input("Policy Deductible *", min_value=0, step=100, value=1000, key=f"pd_{current_key}")
+            policy_annual_premium = st.number_input("Annual Premium *", min_value=0.0, format="%.2f", value=1200.0, key=f"pap_{current_key}")
+            umbrella_limit = st.number_input("Umbrella Limit", min_value=0, step=100000, value=0, key=f"ul_{current_key}")
+            insured_zip = st.text_input("Insured Zip Code *", "90001", key=f"izip_{current_key}")
 
         st.subheader("2. Insured's Profile & Financials")
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            insured_occupation = st.text_input("Insured Occupation", "Engineer")
-            insured_hobbies = st.text_input("Insured Hobbies", "reading")
-            insured_relationship = st.text_input("Insured Relationship", "husband")
+            insured_occupation = st.text_input("Insured Occupation", "Engineer", key=f"iocc_{current_key}")
+            insured_hobbies = st.text_input("Insured Hobbies", "reading", key=f"ihob_{current_key}")
+            insured_relationship = st.text_input("Insured Relationship", "husband", key=f"irel_{current_key}")
         with col2:
-            capital_gains = st.number_input("Capital Gains", format="%.2f", value=0.0)
+            capital_gains = st.number_input("Capital Gains", format="%.2f", value=0.0, key=f"cg_{current_key}")
         with col3:
-            capital_loss = st.number_input("Capital Loss", format="%.2f", value=0.0)
+            capital_loss = st.number_input("Capital Loss", format="%.2f", value=0.0, key=f"cl_{current_key}")
 
 
         st.subheader("3. Incident & Claim Details")
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            incident_date = st.date_input("Incident Date *", datetime.date(2023, 2, 10))
-            incident_type = st.selectbox("Incident Type *", incident_type_options, index=3)
-            collision_type = st.selectbox("Collision Type *", ["Rear Collision", "Side Collision", "Front Collision", "?"], index=0)
-            incident_severity = st.selectbox("Incident Severity *", severity_options, index=0)
+            incident_date = st.date_input("Incident Date *", datetime.date(2023, 2, 10), key=f"idate_{current_key}")
+            incident_type = st.selectbox("Incident Type *", incident_type_options, index=3, key=f"itype_{current_key}")
+            collision_type = st.selectbox("Collision Type *", ["Rear Collision", "Side Collision", "Front Collision", "?"], index=0, key=f"ctype_{current_key}")
+            incident_severity = st.selectbox("Incident Severity *", severity_options, index=0, key=f"isev_{current_key}")
 
         with col2:
-            incident_state = st.selectbox("Incident State *", state_options)
-            incident_city = st.text_input("Incident City", "Chennai")
-            incident_location = st.text_input("Incident Location (Street)", "Mount Road")
-            incident_hour_of_the_day = st.number_input("Incident Hour (0-23) *", min_value=0, max_value=23, value=14)
+            incident_state = st.selectbox("Incident State *", state_options, key=f"istate_{current_key}")
+            incident_city = st.text_input("Incident City", "Chennai", key=f"icity_{current_key}")
+            incident_location = st.text_input("Incident Location (Street)", "Mount Road", key=f"iloc_{current_key}")
+            incident_hour_of_the_day = st.number_input("Incident Hour (0-23) *", min_value=0, max_value=23, value=14, key=f"ihour_{current_key}")
 
         with col3:
-            authorities_contacted = st.selectbox("Authorities Contacted", authorities_options)
-            number_of_vehicles_involved = st.number_input("Vehicles Involved *", min_value=1, value=2)
-            property_damage = st.selectbox("Property Damage? *", yes_no_options, index=1)
-            police_report_available = st.selectbox("Police Report Available? *", yes_no_options, index=1)
+            authorities_contacted = st.selectbox("Authorities Contacted", authorities_options, key=f"acont_{current_key}")
+            number_of_vehicles_involved = st.number_input("Vehicles Involved *", min_value=1, value=2, key=f"nvi_{current_key}")
+            property_damage = st.selectbox("Property Damage? *", yes_no_options, index=1, key=f"pdam_{current_key}")
+            police_report_available = st.selectbox("Police Report Available? *", yes_no_options, index=1, key=f"prpt_{current_key}")
 
 
         st.subheader("4. Injuries & Financials")
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            bodily_injuries = st.number_input("Bodily Injuries (count) *", min_value=0, value=1)
-            witnesses = st.number_input("Witnesses (count) *", min_value=0, value=1)
+            bodily_injuries = st.number_input("Bodily Injuries (count) *", min_value=0, value=1, key=f"bi_{current_key}")
+            witnesses = st.number_input("Witnesses (count) *", min_value=0, value=1, key=f"wit_{current_key}")
         with col2:
-            total_claim_amount = st.number_input("Total Claim Amount *", min_value=0.0, format="%.2f", value=15000.0)
+            total_claim_amount = st.number_input("Total Claim Amount *", min_value=0.0, format="%.2f", value=15000.0, key=f"tca_{current_key}")
         with col3:
-            injury_claim = st.number_input("Injury Claim Amount *", min_value=0.0, format="%.2f", value=5000.0)
+            injury_claim = st.number_input("Injury Claim Amount *", min_value=0.0, format="%.2f", value=5000.0, key=f"ic_{current_key}")
         with col4:
-            property_claim = st.number_input("Property Claim Amount *", min_value=0.0, format="%.2f", value=8000.0)
-            vehicle_claim = st.number_input("Vehicle Claim Amount *", min_value=0.0, format="%.2f", value=2000.0)
+            property_claim = st.number_input("Property Claim Amount *", min_value=0.0, format="%.2f", value=8000.0, key=f"pc_{current_key}")
+            vehicle_claim = st.number_input("Vehicle Claim Amount *", min_value=0.0, format="%.2f", value=2000.0, key=f"vc_{current_key}")
 
         st.subheader("5. Vehicle & Description")
         col1, col2, col3 = st.columns(3)
         with col1:
-            auto_make = st.text_input("Auto Make", "Honda")
+            auto_make = st.text_input("Auto Make", "Honda", key=f"amake_{current_key}")
         with col2:
-            auto_model = st.text_input("Auto Model", "Civic")
+            auto_model = st.text_input("Auto Model", "Civic", key=f"amodel_{current_key}")
         with col3:
-            auto_year = st.number_input("Auto Year", min_value=1950, max_value=datetime.date.today().year + 1, value=2019)
+            auto_year = st.number_input("Auto Year", min_value=1950, max_value=datetime.date.today().year + 1, value=2019, key=f"ayear_{current_key}")
 
-        claim_description = st.text_area("Claim Description *", "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain.")
+        claim_description = st.text_area("Claim Description *", "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain.", key=f"cdesc_{current_key}")
 
         # --- Button Row ---
         col_submit, col_reset = st.columns([1, 1])
@@ -301,12 +301,10 @@ def single_claim_entry():
             submitted = st.form_submit_button("▶️ **Analyze Claim for Fraud**")
             
         with col_reset:
-            # 4. Use the on_click callback to trigger the key change
             st.form_submit_button("🔄 Reset Form", on_click=reset_form_fields_callback)
 
-
     # POST-SUBMISSION LOGIC (Single Claim - UNCHANGED)
-    # ... (rest of the submission logic)
+    # ... (rest of the submission logic remains the same)
     if submitted:
         
         with st.spinner(f"Running..."):
@@ -361,7 +359,6 @@ def single_claim_entry():
                 col2.metric("Risk Level", result['risk_level'])
                 col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
                             help="The model's suspicion score based on the claim description text.")
-                
                 #with st.expander("Show Full JSON Response"):
                     #st.json(result)
                 
@@ -431,6 +428,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
