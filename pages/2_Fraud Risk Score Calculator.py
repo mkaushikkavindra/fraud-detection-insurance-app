@@ -224,7 +224,7 @@ def single_claim_entry():
         
         with col2:
             months_as_customer = st.number_input("Months as Customer *", min_value=0, key=f"mac_{current_key}")
-            age = st.number_input("Insured Age *", min_value=16, max_value=100, key=f"age_{current_key}")
+            age = st.number_input("Insured Age *", min_value=18, max_value=100, key=f"age_{current_key}")
             insured_sex = st.selectbox("Insured Sex *", sex_options, key=f"isex_{current_key}")
             insured_education_level = st.selectbox("Insured Education *", education_options, index=1, key=f"iedu_{current_key}")
 
@@ -428,6 +428,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
