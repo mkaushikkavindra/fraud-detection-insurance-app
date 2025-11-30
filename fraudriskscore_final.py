@@ -203,7 +203,7 @@ def fraudriskscore_ensemble(claim: Dict[str, Any]) -> Dict[str, Any]:
         "fraud_risk_score": max_result['fraud_risk_score'],
         "text_suspicion_score": max_result['text_suspicion_score'],
         "risk_level": max_result['risk_level'],
-        "decision": max_result['decision']
+        "decision": max_result['decision'],
         #"source_model": max_result['model'],
         #"all_model_results": {resdict['model']: resdict for resdict in resultdicts}
         "model_scores": {
