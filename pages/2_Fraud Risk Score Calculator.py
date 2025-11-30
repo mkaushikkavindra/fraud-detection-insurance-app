@@ -359,6 +359,43 @@ def single_claim_entry():
                 col2.metric("Risk Level", result['risk_level'])
                 col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
                             help="The model's suspicion score based on the claim description text.")
+
+                st.markdown("---")
+                st.subheader("Model Score Comparison")
+
+                # 1. Prepare Data for Table and Chart
+                scores = result['model_scores']
+                df_scores = pd.DataFrame({
+                    'Model': scores.keys(),
+                    'Score (%)': [round(v * 100, 2) for v in scores.values()]
+                }).set_index('Model')
+
+                # 2. Display Table
+                st.write("**Individual Fraud Probabilities (Prob. of Fraud)**")
+                st.dataframe(df_scores.T, use_container_width=True)
+
+                # 3. Display Chart
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.write("**Visual Comparison of Scores** ")
+                
+                fig, ax = plt.subplots(figsize=(7, 4))
+                
+                # Highlight the highest score (which determines the final decision)
+                colors = ['#ffcc99', '#66b3ff', '#99ff99']
+                
+                bars = ax.bar(df_scores.index, df_scores['Score (%)'], color=colors)
+                
+                # Add score labels on top of the bars
+                for bar in bars:
+                    yval = bar.get_height()
+                    ax.text(bar.get_x() + bar.get_width()/2, yval + 1, f'{yval:.1f}%', ha='center', va='bottom', fontsize=10)
+
+                ax.set_ylim(0, 105)
+                ax.set_title("Model Score Comparison", fontsize=14)
+                ax.set_ylabel("Fraud Risk Score (%)")
+                ax.grid(axis='y', linestyle='--', alpha=0.7)
+                st.pyplot(fig)
+            
                 #with st.expander("Show Full JSON Response"):
                     #st.json(result)
                 
@@ -428,6 +465,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
