@@ -175,13 +175,19 @@ input_mode = st.radio(
 )
 #st.markdown("---")
 
-def reset_form_fields():
-    st.rerun()
+if 'reset_key' not in st.session_state:
+    st.session_state.reset_key = 0
+
+# 2. Define the callback function to reset the form
+def reset_form_fields_callback():
+    st.session_state.reset_key += 1
     
 def single_claim_entry():
     st.subheader("Enter Single Claim Details")
+    
     # --- The original form block starts here ---
-    with st.form(key="claim_values"):
+    # Use the reset_key to force a re-render of all widgets inside the form
+    with st.form(key=f"claim_values_{st.session_state.reset_key}"):
         # --- Helper lists (UNCHANGED) ---
         yes_no_options = ["NO", "YES"]
         state_options = [
@@ -310,7 +316,15 @@ def single_claim_entry():
 
         claim_description = st.text_area("Claim Description *", "Rear-end collision while stopped at a red light. Airbag deployed. Claimant reported neck pain.")
 
-        submitted = st.form_submit_button("Analyze Claim for Fraud")
+        # --- Button Row ---
+        col_submit, col_reset = st.columns([1, 1])
+        
+        with col_submit:
+            submitted = st.form_submit_button("▶️ **Analyze Claim for Fraud**")
+            
+        with col_reset:
+            # Add the Reset button using the callback function
+            st.form_submit_button("🔄 Reset Form", on_click=reset_form_fields_callback)
 
 
     # POST-SUBMISSION LOGIC (Single Claim - UNCHANGED)
@@ -361,11 +375,11 @@ def single_claim_entry():
 
                 result = fraudriskscore_ensemble(final_claim_data)
                 
-                st.success("Analysis Complete!")
+                st.success("Analysis Complete! 🕵️‍♀️")
                 
                 st.subheader(f"Decision: **{result['decision']}**")
                 col1, col2, col3 = st.columns(3)
-                col1.metric("Fraud Risk Score", f"{result['fraud_risk_score'] * 100:.1f}%") #help=f"The selected model's ({selected_model_name}) overall fraud probability, based on a threshold of {result['threshold_used'] * 100:.1f}%.")
+                col1.metric("Fraud Risk Score", f"{result['fraud_risk_score'] * 100:.1f}%")
                 col2.metric("Risk Level", result['risk_level'])
                 col3.metric("Text Suspicion Score", f"{result['text_suspicion_score'] * 100:.1f}%",
                             help="The model's suspicion score based on the claim description text.")
@@ -439,6 +453,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
