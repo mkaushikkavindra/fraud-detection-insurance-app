@@ -175,9 +175,6 @@ input_mode = st.radio(
 )
 #st.markdown("---")
 
-if 'logged_in' not in st.session_state or not st.session_state.logged_in:
-# ... (rest of login check)
-
 # Ensure the reset key is initialized globally
 if 'reset_key' not in st.session_state:
     st.session_state.reset_key = 0
@@ -434,6 +431,7 @@ commented="""elif input_mode == 'Analyze Proof Images':
         st.subheader("COMING SOON!")
     st.subheader("Upload the given proof images for analysis:")
     st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])"""
+
 
 
 
