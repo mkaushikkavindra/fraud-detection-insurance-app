@@ -181,12 +181,12 @@ def fraudriskscore_GBC(claim: Dict[str, Any]) -> Dict[str, Any]:
 fraudriskscore_final=fraudriskscore_RFC
 
 def fraudriskscore_ensemble(claim: Dict[str, Any]) -> Dict[str, Any]:
-    resultdicts = [
-        fraudriskscore_RFC(claim),
-        fraudriskscore_LR(claim),
-        fraudriskscore_GBC(claim),
-    ]
-
+    result_rfc = fraudriskscore_RFC(claim)
+    result_lr = fraudriskscore_LR(claim)
+    result_gbc = fraudriskscore_GBC(claim)
+    
+    resultdicts = [result_rfc, result_lr, result_gbc]
+    
     max_score = -1
     max_result = None
     
@@ -206,6 +206,11 @@ def fraudriskscore_ensemble(claim: Dict[str, Any]) -> Dict[str, Any]:
         "decision": max_result['decision']
         #"source_model": max_result['model'],
         #"all_model_results": {resdict['model']: resdict for resdict in resultdicts}
+        "model_scores": {
+            "RFC": result_rfc['fraud_risk_score'],
+            "LR": result_lr['fraud_risk_score'],
+            "GBC": result_gbc['fraud_risk_score'],
+        }
     }
     
     return final_ensemble_result
