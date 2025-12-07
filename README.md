@@ -56,7 +56,9 @@ Username: admin, Password: securepwd
 The project follows the standard Streamlit multi-page application structure:
 
 fraud-detection-insurance-app/
+
 ├── .devcontainer/
+
 ├── .streamlit/
 │   └── config.toml
 ├── pages/
