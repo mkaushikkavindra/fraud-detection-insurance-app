@@ -26,7 +26,7 @@ Ensure you have Python 3.9+ installed.
 ### 2. Clone the Repository
 
 ```bash
-git clone [https://github.com/your-username/fraud-detection-insurance-app.git](https://github.com/your-username/fraud-detection-insurance-app.git)
+git clone [https://github.com/mkaushikkavindra/fraud-detection-insurance-app.git](https://github.com/mkaushikkavindra/fraud-detection-insurance-app.git)
 cd fraud-detection-insurance-app
 ```
 
