@@ -49,8 +49,9 @@ streamlit run Login.py
 ### Access Credentials
 Use the following test credentials to log in:
 
-Username: user1, Password: pass123
-Username: admin, Password: securepwd
+1) Username: user1, Password: pass123
+
+2) Username: admin, Password: securepwd
 
 ### File Structure
 The project follows the standard Streamlit multi-page application structure:
