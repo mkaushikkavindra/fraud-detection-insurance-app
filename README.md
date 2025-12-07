@@ -56,23 +56,41 @@ Username: admin, Password: securepwd
 The project follows the standard Streamlit multi-page application structure:
 
 fraud-detection-insurance-app/
+
 /-- .devcontainer
+
 /-- .streamlit
+
 /---- config.toml
+
 /-- pages
+
 /---- 1_Home.py
+
 /---- 2_Fraud Risk Score Calculator.py
+
 /---- 3_User Guide.py
+
 /---- 4_How Your Fraud Risk Score is Calculated?.py
+
 /-- Login.py
+
 /-- README.md
+
 /-- finalthresholdvalue.txt
+
 /-- fraud_detection_model.joblib
+
 /-- fraudriskscore_final.py
+
 /-- gbcmodel.joblib
+
 /-- logisticregression.joblib
+
 /-- requirements.txt
+
 /-- runtime.txt
+
 /-- text_model.joblib
 
 ## Core Logic: How Scoring Works
