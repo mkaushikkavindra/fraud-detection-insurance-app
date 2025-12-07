@@ -55,6 +55,7 @@ Username: admin, Password: securepwd
 ### File Structure
 The project follows the standard Streamlit multi-page application structure:
 
+```bash
 fraud-detection-insurance-app/
 ├── .devcontainer/
 ├── .streamlit/
@@ -74,6 +75,7 @@ fraud-detection-insurance-app/
 ├── requirements.txt
 ├── runtime.txt
 └── text_model.joblib
+```
 
 ## Core Logic: How Scoring Works
 
