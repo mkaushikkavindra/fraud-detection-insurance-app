@@ -56,21 +56,24 @@ Username: admin, Password: securepwd
 The project follows the standard Streamlit multi-page application structure:
 
 fraud-detection-insurance-app/
+├── .devcontainer/
 ├── .streamlit/
-│   └── config.toml           # Streamlit application theme settings
+│   └── config.toml
 ├── pages/
-│   ├── 1_Home.py             # Welcome page and feature overview
-│   ├── 2_Fraud Risk Score Calculator.py # The main scoring interface
-│   ├── 3_User Guide.py       # Instructions for using the app
-│   └── 4_How Your Fraud Risk Score is Calculated?.py # Model transparency document
-├── Login.py                  # **Application Entrypoint** and Login page
-├── fraudriskscore_final.py   # Core logic for feature engineering, model loading, and scoring
-├── requirements.txt          # Python dependencies
-├── finalthresholdvalue.txt   # Global threshold value for prediction logic (optional override)
-├── fraud_detection_model.joblib # Random Forest Classifier (RFC) model
-├── gbcmodel.joblib           # Gradient Boosting Classifier (GBC) model
-├── logisticregression.joblib # Logistic Regression (LR) model
-└── text_model.joblib         # Text analysis model (e.g., Logistic Regression on Sentence Embeddings)
+│   ├── 1_Home.py
+│   ├── 2_Fraud Risk Score Calculator.py
+│   ├── 3_User Guide.py
+│   └── 4_How Your Fraud Risk Score is Calculated?.py
+├── Login.py
+├── README.md
+├── finalthresholdvalue.txt
+├── fraud_detection_model.joblib
+├── fraudriskscore_final.py
+├── gbcmodel.joblib
+├── logisticregression.joblib
+├── requirements.txt
+├── runtime.txt
+└── text_model.joblib
 
 ## Core Logic: How Scoring Works
 
