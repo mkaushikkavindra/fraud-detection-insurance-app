@@ -59,4 +59,4 @@ st.markdown("---")
 
 # Note: The sidebar is collapsed on initial load. We instruct the user to expand it.
 
-#st.info("Click the hamburger menu (☰) in the top-left corner, and select the 'Login' page to continue.")
+st.info("Click the hamburger menu (☰) in the top-left corner, to access other webpages of this web application.")
