@@ -95,7 +95,6 @@ st.markdown("---")
 
 st.markdown("""
 <ol start="13">
-<li>For logging out, click the <b>"Logout"</b> button located at the <b>top of the sidebar</b>, just below your welcome message.</li>
-<li><b>For enhanced safety</b>, you will be automatically logged out and redirected to the login page once you close the browser tab or navigate away from the application.</li>
+<li>For logging out, click the <b>"Logout"</b> button located below the pages list <b>in the sidebar</b>, just below your welcome message.</li>
 </ol>
 """, unsafe_allow_html=True)
