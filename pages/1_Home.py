@@ -52,11 +52,11 @@ st.markdown("---")
 
 ##Get Started
 
-st.markdown("""
-To protect sensitive claim data, access to the Fraud Risk Score Calculator is restricted.
-Please **Sign In** using the official login page available in the navigation menu on the left (once the sidebar is expanded):
-""")
+#st.markdown("""
+#To protect sensitive claim data, access to the Fraud Risk Score Calculator is restricted.
+#Please **Sign In** using the official login page available in the navigation menu on the left (once the sidebar is expanded):
+#""")
 
 # Note: The sidebar is collapsed on initial load. We instruct the user to expand it.
 
-st.info("Click the hamburger menu (☰) in the top-left corner, and select the 'Login' page to continue.")
+#st.info("Click the hamburger menu (☰) in the top-left corner, and select the 'Login' page to continue.")
