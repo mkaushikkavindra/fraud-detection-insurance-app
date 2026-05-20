@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Streaming</title>
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0b0c;
+            color: #f5f5f7;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 850px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 5px; letter-spacing: -0.5px; }
+        p.subtitle { color: #86868b; margin-top: 0; margin-bottom: 25px; }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+        .online { background-color: #1a4d2e; color: #4af28b; box-shadow: 0 0 20px rgba(74,242,139,0.2); }
+        .offline { background-color: #4a1515; color: #ff6b6b; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 10px; background-color: currentColor; }
+        .player-wrapper {
+            display: none;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border: 1px solid #222;
+        }
+        .video-js { width: 100% !important; height: auto; aspect-ratio: 16/9; }
+        .offline-placeholder {
+            background-color: #121214;
+            border: 2px dashed #2d2d30;
+            border-radius: 16px;
+            padding: 80px 20px;
+            font-size: 1.2rem;
+            color: #86868b;
+        }
+        .admin-trigger {
+            margin-top: 50px;
+            color: #222;
+            cursor: pointer;
+            font-size: 12px;
+            user-select: none;
+        }
+        .admin-panel {
+            display: none;
+            background: #121214;
+            border: 1px solid #2d2d30;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+            background: #1c1c1e;
+            border: 1px solid #2d2d30;
+            color: #fff;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+        button {
+            padding: 8px 15px;
+            background: #0071e3;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover { background: #147ce5; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Live TV Streaming</h1>
+    <p class="subtitle">Simulated Live Cinema Station Across the WAN</p>
+    
+    <div id="statusIndicator" class="status-badge offline">
+        <span class="dot"></span><span id="statusText">Checking Airwaves...</span>
+    </div>
+
+    <div id="playerContainer" class="player-wrapper">
+        <video id="live-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto">
+            <source src="" type="application/x-mpegURL">
+        </video>
+    </div>
+
+    <div id="offlinePlaceholder" class="offline-placeholder">
+        Off-Air, check back shortly!
+    </div>
+
+    <div class="admin-trigger" onclick="toggleAdminPanel()">Configure Channel Link Address</div>
+    <div id="adminPanel" class="admin-panel">
+        <input type="text" id="ngrokUrlInput" placeholder="Paste full https://...ngrok-free.app link here">
+        <button onclick="updateBroadcastingLink()">Save Station</button>
+    </div>
+</div>
+
+<script>
+    let player = videojs('live-player', {
+        liveui: true,
+        fluid: true,
+        controlBar: {
+            playToggle: true,
+            volumePanel: true,
+            currentTimeDisplay: false, // Hide static tracking clocks
+            timeDivider: false,
+            durationDisplay: false,
+            remainingTimeDisplay: false,
+            progressControl: true,     // Force keep the scrollable timeline bar visible
+            liveDisplay: true          // Force show the bright glowing LIVE badge indicator
+        }
+    });
+
+    function toggleAdminPanel() {
+        const panel = document.getElementById('adminPanel');
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function updateBroadcastingLink() {
+        let inputLink = document.getElementById('ngrokUrlInput').value.trim();
+        if (inputLink.endsWith('/')) {
+            inputLink = inputLink.slice(0, -1);
+        }
+        if(inputLink) {
+            localStorage.setItem('activeNgrokTunnel', inputLink);
+            alert('Broadcasting link updated successfully! Refreshing browser...');
+            location.reload();
+        }
+    }
+
+    function executeNetworkStreamScan() {
+        const savedNgrokBase = localStorage.getItem('activeNgrokTunnel');
+        
+        if (!savedNgrokBase) {
+            document.getElementById('statusText').innerText = "Awaiting Link Input Setup";
+            return;
+        }
+
+        const streamUrl = `${savedNgrokBase}/livestream.m3u8`;
+        fetch(streamUrl, { 
+            method: 'GET', 
+            headers: { 'ngrok-skip-browser-warning': 'true' },
+            cache: 'no-store' 
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('statusIndicator').className = "status-badge online";
+                document.getElementById('statusText').innerText = "On-Air";
+                document.getElementById('offlinePlaceholder').style.display = "none";
+                document.getElementById('playerContainer').style.display = "block";
+                
+                if (player.src() !== streamUrl) {
+                    player.src({ 
+                        src: streamUrl, 
+                        type: 'application/x-mpegURL',
+                        withCredentials: false
+                    });
+                    videojs.hook('beforebeforeRequest', function(options) {
+                        options.headers = options.headers || {};
+                        options.headers['ngrok-skip-browser-warning'] = '1';
+                        return options;
+                    });
+                    player.play().catch(() => console.log('Autoplay blocked. Press play button manually!'));
+                }
+            } else {
+                triggerOfflineDashboard();
+            }
+        })
+        .catch(() => {
+            triggerOfflineDashboard();
+        });
+    }
+
+    function triggerOfflineDashboard() {
+        document.getElementById('statusIndicator').className = "status-badge offline";
+        document.getElementById('statusText').innerText = "OFFLINE";
+        document.getElementById('offlinePlaceholder').style.display = "block";
+        document.getElementById('playerContainer').style.display = "none";
+        player.pause();
+    }
+
+    if(localStorage.getItem('activeNgrokTunnel')) {
+        document.getElementById('ngrokUrlInput').value = localStorage.getItem('activeNgrokTunnel');
+    }
+
+    executeNetworkStreamScan();
+    setInterval(executeNetworkStreamScan, 6000);
+</script>
+
+</body>
+</html>
